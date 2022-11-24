@@ -1,2 +1,2 @@
-# el4107-project2
+# Online Camera
 Online camera available to all users
