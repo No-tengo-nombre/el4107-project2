@@ -33,6 +33,7 @@ WELCOME_MSG = r"""
           ⠀⠀⠀⠀⠀⠀⠀⠹⣿⣿⣿⣿⣦⣤⣤⣤⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⠀⠀⠀
           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⣿⣿⣿⣿⣿⣿⠿⠋⠉⠛⠋⠉⠉⠁⠀⠀⠀⠀
           ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠁
+
 """
 
 
@@ -42,13 +43,16 @@ class ServerCore:
         self.__should_close = False
 
     def start(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as camera_s:
                 s.bind(FIXED_SERVER_DESC)
                 camera_s.bind(FIXED_CAMERA_DESC)
+                s.listen()
 
                 while not self.__should_close:
-                    s.send(WELCOME_MSG.encode())
+                    conn, addr = s.accept()
+                    LOGGER.info(f"Connection accepted from address {addr}")
+                    conn.send(WELCOME_MSG.encode())
 
-                    user_thread = threading.Thread(target=handle_user, args=(s, camera_s))
+                    user_thread = threading.Thread(target=handle_user, args=(conn, s, camera_s))
                     user_thread.start()
