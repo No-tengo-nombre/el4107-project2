@@ -53,5 +53,5 @@ class ServerCore:
             LOGGER.info(f"Connection accepted from address {addr}.")
             conn.send(WELCOME_MSG.encode())
 
-            user_thread = threading.Thread(target=handle_user, args=(self.camera_s))
+            user_thread = threading.Thread(target=handle_user, args=(conn, self.camera_s))
             user_thread.start()
