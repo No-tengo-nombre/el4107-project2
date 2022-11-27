@@ -1,2 +1,2 @@
-def handle_user():
+def handle_user(camera_socket):
     pass
