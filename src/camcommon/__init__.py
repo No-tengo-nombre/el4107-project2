@@ -1,0 +1,1 @@
+from camcommon.configs import *

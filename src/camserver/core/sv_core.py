@@ -1,7 +1,7 @@
 import socket
 import threading
 
-from camserver.configs import FIXED_CAMERA_DESC, FIXED_SERVER_DESC
+from camcommon import FIXED_CAMERA_DESC, FIXED_SERVER_DESC
 from camserver.core.user_handle import handle_user
 from camserver.logger import LOGGER
 
