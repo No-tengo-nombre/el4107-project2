@@ -2,6 +2,7 @@ import socket
 
 from camcommon import FIXED_SERVER_DESC
 from camcommon.logger import LOGGER
+from camclient.core.packet_handle import handle_packet
 
 
 class ClientCore:
@@ -16,3 +17,6 @@ class ClientCore:
             while not self.__should_close:
                 conn, addr = s.accept()
                 LOGGER.info(f"Connection accepted from {addr}")
+
+                packet = conn.recv(1024)
+                handle_packet()
