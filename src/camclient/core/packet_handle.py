@@ -1,2 +1,2 @@
 def handle_packet(packet):
-    pass
+    print(packet)
