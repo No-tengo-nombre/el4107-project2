@@ -1,4 +1,4 @@
-from camsv.configs import RECEIVING_WINDOW
+from camserver.configs import RECEIVING_WINDOW
 
 
 def handle_user(user_conn, user_socket, camera_socket):

@@ -1,9 +1,9 @@
 import socket
 import threading
 
-from camsv.configs import FIXED_CAMERA_DESC, FIXED_SERVER_DESC
-from camsv.core.user_handle import handle_user
-from camsv.logger import LOGGER
+from camserver.configs import FIXED_CAMERA_DESC, FIXED_SERVER_DESC
+from camserver.core.user_handle import handle_user
+from camserver.logger import LOGGER
 
 
 WELCOME_MSG = r"""
