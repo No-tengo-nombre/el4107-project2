@@ -1,7 +1,7 @@
 import socket
 import threading
 
-from camcommon import FIXED_CAMERA_DESC, FIXED_SERVER_PORT
+from camcommon import FIXED_CAMERA_DESC, FIXED_CAMERA_PORT, FIXED_SERVER_DESC, FIXED_SERVER_PORT
 from camcommon.logger import LOGGER
 from camserver.core.user_handle import handle_user
 
@@ -44,8 +44,10 @@ class ServerCore:
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as camera_s:
+                # s.bind(FIXED_SERVER_DESC)
                 s.bind(("", FIXED_SERVER_PORT))
-                camera_s.bind(FIXED_CAMERA_DESC)
+                # camera_s.bind(FIXED_CAMERA_DESC)
+                camera_s.bind(("", FIXED_CAMERA_PORT))
                 s.listen()
 
                 while not self.__should_close:
