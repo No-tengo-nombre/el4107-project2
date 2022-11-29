@@ -1,6 +1,6 @@
 import socket
 
-from camcommon import FIXED_SERVER_DESC
+from camcommon import FIXED_SERVER_PORT, FIXED_SERVER_DESC, RECEIVING_WINDOW
 from camcommon.logger import LOGGER
 from camclient.core.packet_handle import handle_packet
 
@@ -11,12 +11,8 @@ class ClientCore:
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(FIXED_SERVER_DESC)
-            s.listen()
+            s.connect(FIXED_SERVER_DESC)
 
             while not self.__should_close:
-                conn, addr = s.accept()
-                LOGGER.info(f"Connection accepted from {addr}")
-
-                packet = conn.recv(1024)
-                handle_packet()
+                packet = s.recv(RECEIVING_WINDOW)
+                handle_packet(packet)
