@@ -39,7 +39,6 @@ WELCOME_MSG = r"""
 
 class ServerCore:
     def __init__(self):
-        self.s = None
         self.__should_close = False
 
     def start(self):
