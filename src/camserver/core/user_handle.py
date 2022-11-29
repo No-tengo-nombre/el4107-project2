@@ -1,4 +1,5 @@
 from camcommon import RECEIVING_WINDOW
+from camcommon.logger import LOGGER
 
 
 def handle_user(user_conn, user_socket, camera_socket):
@@ -11,5 +12,8 @@ def handle_user(user_conn, user_socket, camera_socket):
 def validate_user(conn):
     conn.send("Enter username: ".encode())
     username = conn.recv(1024).decode()
+    LOGGER.info(f"Received username {username}")
+
     conn.send("Enter password: ".encode())
     password = conn.recv(1024).decode()
+    LOGGER.info("Received password")

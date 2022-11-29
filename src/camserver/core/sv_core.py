@@ -43,7 +43,7 @@ class ServerCore:
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as camera_s:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as camera_s:
                 s.bind(FIXED_SERVER_DESC)
                 # s.bind(("", FIXED_SERVER_PORT))
                 camera_s.bind(FIXED_CAMERA_DESC)
