@@ -3,7 +3,7 @@ import os
 from datetime import datetime
 
 
-LOGGER = logging.Logger("online-camera")
+LOGGER = logging.Logger("camgrill")
 
 log_fmt = logging.Formatter(
     fmt="[%(asctime)s] %(levelname)s :: %(message)s",
