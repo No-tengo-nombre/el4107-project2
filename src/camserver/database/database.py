@@ -36,8 +36,8 @@ class DateTimeEncoderDecoder(json.JSONEncoder):
     @staticmethod
     def decode(json_dict):
         if "users" in json_dict:
-            for user, features in json_dict["users"]:
-                json_dict["users"][user]["join_date"] = datetime.fromisoformat(
+            for user, features in json_dict["users"].items():
+                json_dict["users"][user]["join_date"] = datetime.datetime.fromisoformat(
                     features["join_date"]
                 )
         return json_dict
