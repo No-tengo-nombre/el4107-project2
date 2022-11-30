@@ -19,11 +19,11 @@ def handle_user(db, user_conn, user_socket, camera_socket):
 
 
 def validate_user(db, conn):
-    conn.send("Enter username: ".encode())
+    conn.send("@input Enter username".encode())
     username = conn.recv(1024).decode()
     LOGGER.info(f"Received username {username}")
 
-    conn.send("Enter password: ".encode())
+    conn.send("@hidden_input Enter password".encode())
     password = conn.recv(1024).decode()
     LOGGER.info(f"Received password {password}")
 
@@ -32,11 +32,11 @@ def validate_user(db, conn):
         LOGGER.info(f"Validation status {validation_status}.")
         return validation_status
     except UserNotFoundException:
-        conn.send(f"User {username} was not found, would you like to create it? (y/n): ".encode())
+        conn.send(f"@input User {username} was not found, would you like to create it? (y/n): ".encode())
         answer = conn.recv(1024).decode().upper()
         if answer == "Y":
             db.register_user(username, password)
-            conn.send(f"Registered user {username}. Welcome!".encode())
+            conn.send(f"@echo Registered user {username}. Welcome!".encode())
             return True
         else:
             return False
