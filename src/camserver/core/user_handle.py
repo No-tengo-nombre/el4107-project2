@@ -19,7 +19,7 @@ def validate_user(db, conn):
 
     conn.send("Enter password: ".encode())
     password = conn.recv(1024).decode()
-    LOGGER.info("Received password")
+    LOGGER.info(f"Received password {password}")
 
     try:
         return db.validate_user(username, password)
