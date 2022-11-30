@@ -11,7 +11,7 @@ def handle_auth(sv_socket):
 def handle_command(cmd, server_socket):
     action, *args = cmd.split(" ")
     if action[0] == "@":
-        globals()[f"__token_action_{action[1:]}"](args, server_socket=server_socket)
+        globals()[f"__server_action_{action[1:]}"](args, server_socket=server_socket)
 
 
 def handle_packet(packet, client):
@@ -28,22 +28,22 @@ def handle_packet(packet, client):
 #                      reason.
 
 
-def __token_action_echo(args, server_socket):
+def __server_action_echo(args, server_socket):
     print(*args)
 
 
-def __token_action_input(args, server_socket):
+def __server_action_input(args, server_socket):
     print(*args)
     print(">>> ", end="")
     server_socket.send(input().encode())
 
 
-def __token_action_hidden_input(args, server_socket):
+def __server_action_hidden_input(args, server_socket):
     print(*args)
     server_socket.send(getpass(">>> ").encode())
 
 
-def __token_action_kick(args, server_socket):
+def __server_action_kick(args, server_socket):
     print(*args)
     server_socket.close()
     quit()
