@@ -55,27 +55,33 @@ class __UserDatabase:
             self.db = json.load(file, object_hook=DateTimeEncoderDecoder.decode)
 
     def user_exists(self, username):
-        user = self.db["users"].get(username)
-        return user
+        with self.mutex:
+            self._update_db()
+            user = self.db["users"].get(username)
+            return user
 
     def validate_user(self, username, password):
         LOGGER.info("Validating user.")
-        user = self.user_exists(username)
-        if user is not None:
-            LOGGER.info("Found user.")
-            user_salt = user["salt"]
-            return _encrypt(password, user_salt) == user["password"].encode()
-        else:
-            raise UserNotFoundException(username)
+        with self.mutex:
+            self._update_db()
+            user = self.user_exists(username)
+            if user is not None:
+                LOGGER.info("Found user.")
+                user_salt = user["salt"]
+                return _encrypt(password, user_salt) == user["password"].encode()
+            else:
+                raise UserNotFoundException(username)
 
     def save_db_file(self, db):
         LOGGER.info("Saving database file.")
-        with open(self.db_file, "w") as file:
-            json.dump(db, file, cls=DateTimeEncoderDecoder)
+        with self.mutex:
+            with open(self.db_file, "w") as file:
+                json.dump(db, file, cls=DateTimeEncoderDecoder)
 
     def register_user(self, username, password):
         LOGGER.info("Registering user.")
         with self.mutex:
+            self._update_db()
             if self.user_exists(username) is not None:
                 raise UserAlreadyExistsException(username)
             else:
