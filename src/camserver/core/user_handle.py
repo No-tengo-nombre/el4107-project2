@@ -6,13 +6,13 @@ from camserver.database.database import UserNotFoundException
 def handle_user(db, user_conn, user_socket, camera_socket):
     if validate_user(db, user_conn):
         LOGGER.info("Successfuly validated user.")
-        user_conn.send(END_AUTH_SUCCESS_STRING.encode())
+        user_conn.send("@echo Successfuly validated user :)".encode())
 
         recv_packet = camera_socket.recv(RECEIVING_WINDOW)
         user_conn.send(recv_packet)
     else:
         LOGGER.info("Failed to validate user.")
-        user_conn.send(END_AUTH_FAILURE_STRING.encode())
+        user_conn.send("@kick Failed to validate the user :(".encode())
 
         user_socket.close()
         LOGGER.info("Finishing user thread.")
