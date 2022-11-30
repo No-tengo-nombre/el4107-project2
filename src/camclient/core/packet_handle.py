@@ -31,7 +31,7 @@ def handle_packet(packet, client):
 #                      reason.
 
 
-def __server_action_echo(args, server_socket):
+def __server_action_echo(args, **_):
     print(*args)
 
 
@@ -52,5 +52,5 @@ def __server_action_kick(args, server_socket):
     quit()
 
 
-def __server_action_break_while_loop(args, server_socket):
+def __server_action_break_while_loop(*_, **__):
     return SIGNAL_BREAK
