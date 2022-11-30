@@ -72,9 +72,8 @@ class __UserDatabase:
 
     def save_db_file(self, db):
         LOGGER.info("Saving database file.")
-        with self.mutex:
-            with open(self.db_file, "w") as file:
-                json.dump(db, file, cls=DateTimeEncoderDecoder)
+        with open(self.db_file, "w") as file:
+            json.dump(db, file, cls=DateTimeEncoderDecoder)
 
     def register_user(self, username, password):
         LOGGER.info("Registering user.")
