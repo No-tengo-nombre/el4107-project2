@@ -4,6 +4,7 @@ import threading
 from camcommon import FIXED_CAMERA_DESC, FIXED_CAMERA_PORT, FIXED_SERVER_DESC, FIXED_SERVER_PORT
 from camcommon.logger import LOGGER
 from camserver.core.user_handle import handle_user
+from camserver.database.database import USER_DATABASE
 
 
 WELCOME_MSG = r"""
@@ -38,6 +39,8 @@ WELCOME_MSG = r"""
 
 
 class ServerCore:
+    db = USER_DATABASE
+
     def __init__(self):
         self.__should_close = False
 
@@ -55,5 +58,5 @@ class ServerCore:
                     LOGGER.info(f"Connection accepted from address {addr}")
                     conn.send(WELCOME_MSG.encode())
 
-                    user_thread = threading.Thread(target=handle_user, args=(conn, s, camera_s))
+                    user_thread = threading.Thread(target=handle_user, args=(self.db, conn, s, camera_s))
                     user_thread.start()
