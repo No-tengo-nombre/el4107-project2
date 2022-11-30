@@ -45,13 +45,14 @@ class ServerCore:
         self.__should_close = False
 
     def start(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as camera_s:
-                s.bind(FIXED_SERVER_DESC)
-                camera_s.bind(FIXED_CAMERA_DESC)
+        while not self.__should_close:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as camera_s:
+                    s.bind(FIXED_SERVER_DESC)
+                    camera_s.bind(FIXED_CAMERA_DESC)
 
-                while not self.__should_close:
                     s.listen()
+                    LOGGER.info(f"Waiting for a connection, socket {s}")
                     conn, addr = s.accept()
                     LOGGER.info(f"Connection accepted from address {addr}")
                     conn.send(WELCOME_MSG.encode())

@@ -5,10 +5,10 @@ def handle_auth(sv_socket):
     while True:
         packet = sv_socket.recv(RECEIVING_WINDOW)
         if packet.decode() == END_AUTH_SUCCESS_STRING:
+            print("Successfuly validated user :)")
             break
         elif packet.decode() == END_AUTH_FAILURE_STRING:
-            packet = sv_socket.recv(RECEIVING_WINDOW)
-            print(packet.decode())
+            print("Failed to validate user :(")
             break
 
         print(packet.decode())
