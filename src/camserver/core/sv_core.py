@@ -51,9 +51,9 @@ class ServerCore:
                 # s.bind(("", FIXED_SERVER_PORT))
                 camera_s.bind(FIXED_CAMERA_DESC)
                 # camera_s.bind(("", FIXED_CAMERA_PORT))
-                s.listen()
 
                 while not self.__should_close:
+                    s.listen()
                     conn, addr = s.accept()
                     LOGGER.info(f"Connection accepted from address {addr}")
                     conn.send(WELCOME_MSG.encode())
