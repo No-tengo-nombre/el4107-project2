@@ -55,10 +55,8 @@ class __UserDatabase:
             self.db = json.load(file, object_hook=DateTimeEncoderDecoder.decode)
 
     def user_exists(self, username):
-        with self.mutex:
-            self._update_db()
-            user = self.db["users"].get(username)
-            return user
+        user = self.db["users"].get(username)
+        return user
 
     def validate_user(self, username, password):
         LOGGER.info("Validating user.")
