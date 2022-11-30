@@ -8,7 +8,7 @@ import uuid
 from camserver.database.constants import USER_DATABASE_FILE
 
 
-def __encrypt(password, salt):
+def _encrypt(password, salt):
     t_sha = hashlib.sha512()
     t_sha.update((password + salt).encode())
     return base64.urlsafe_b64encode(t_sha.digest())
@@ -33,10 +33,11 @@ class DateTimeEncoderDecoder(json.JSONEncoder):
 
     @staticmethod
     def decode(json_dict):
-        for user, features in json_dict["users"]:
-            json_dict["users"][user]["join_date"] = datetime.fromisoformat(
-                features["join_date"]
-            )
+        if "users" in json_dict:
+            for user, features in json_dict["users"]:
+                json_dict["users"][user]["join_date"] = datetime.fromisoformat(
+                    features["join_date"]
+                )
         return json_dict
 
 
@@ -48,8 +49,8 @@ class __UserDatabase:
         self._update_db()
 
     def _update_db(self):
-        with open(__UserDatabase.db_file, "r") as db:
-            self.db = json.load(db, object_hook=DateTimeEncoderDecoder.decode)
+        with open(self.db_file, "r") as file:
+            self.db = json.load(file, object_hook=DateTimeEncoderDecoder.decode)
 
     def user_exists(self, username):
         user = self.db["users"].get(username)
@@ -59,13 +60,12 @@ class __UserDatabase:
         user = self.user_exists(username)
         if user is not None:
             user_salt = user["salt"]
-            return __encrypt(password, user_salt) == user["password"]
+            return _encrypt(password, user_salt) == user["password"]
         else:
             raise UserNotFoundException(username)
 
-    @staticmethod
-    def save_db_file(db):
-        with open(__UserDatabase.db_file, "w") as file:
+    def save_db_file(self, db):
+        with open(self.db_file, "w") as file:
             json.dump(db, file, cls=DateTimeEncoderDecoder)
 
     def register_user(self, username, password):
@@ -76,7 +76,7 @@ class __UserDatabase:
                 salt = str(uuid.uuid4())
                 self.db["users"][username] = {
                     "salt": salt,
-                    "password": __encrypt(password, salt),
+                    "password": _encrypt(password, salt),
                     "join_date": datetime.datetime.now(),
                 }
                 self.save_db_file(self.db)
