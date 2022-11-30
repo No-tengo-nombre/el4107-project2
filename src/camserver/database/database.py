@@ -17,11 +17,11 @@ class UserNotFoundException(Exception):
         super().__init__(f"User {username} was not found.")
 
 
-class UserDatabase:
+class __UserDatabase:
     db_file = USER_DATABASE_FILE
 
     def __init__(self) -> None:
-        with open(UserDatabase.db_file, "r") as db:
+        with open(__UserDatabase.db_file, "r") as db:
             self.db = json.load(db)
 
     def user_exists(self, username):
@@ -35,3 +35,5 @@ class UserDatabase:
             return __encrypt(password, user_salt) == user["password"]
         else:
             raise UserNotFoundException(username)
+
+USER_DATABASE = __UserDatabase()
