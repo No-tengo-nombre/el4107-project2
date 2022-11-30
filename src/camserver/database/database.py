@@ -64,7 +64,7 @@ class __UserDatabase:
         if user is not None:
             LOGGER.info("Found user.")
             user_salt = user["salt"]
-            return _encrypt(password, user_salt) == user["password"]
+            return _encrypt(password, user_salt) == user["password"].encode()
         else:
             raise UserNotFoundException(username)
 
