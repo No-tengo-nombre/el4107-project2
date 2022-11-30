@@ -45,7 +45,7 @@ class __UserDatabase:
     mutex = threading.Lock()
 
     def __init__(self) -> None:
-        self._udpate_db()
+        self._update_db()
 
     def _update_db(self):
         with open(__UserDatabase.db_file, "r") as db:
