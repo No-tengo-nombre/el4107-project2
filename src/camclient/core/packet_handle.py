@@ -1,12 +1,13 @@
-from camcommon import RECEIVING_WINDOW
-
+from camcommon import RECEIVING_WINDOW, END_AUTH_STRING
 
 
 def handle_auth(sv_socket):
-    username_prompt = sv_socket.recv(RECEIVING_WINDOW)
-    sv_socket.send(input(username_prompt.decode()).encode())
-    pass_prompt = sv_socket.recv(RECEIVING_WINDOW)
-    sv_socket.send(input(pass_prompt.decode()).encode())
+    while True:
+        packet = sv_socket.recv(RECEIVING_WINDOW)
+        if packet.decode() == END_AUTH_STRING:
+            break
+        print(packet.decode(), end="")
+        sv_socket.send(input().encode())
 
 
 def handle_packet(packet):
