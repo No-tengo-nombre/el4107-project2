@@ -8,6 +8,9 @@ class ClientCore:
     def __init__(self):
         self.__should_close = False
 
+    def close(self):
+        self.__should_close = True
+
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect(FIXED_SERVER_DESC)
@@ -17,4 +20,4 @@ class ClientCore:
             handle_auth(s)
             while not self.__should_close:
                 packet = s.recv(RECEIVING_WINDOW)
-                handle_packet(packet)
+                handle_packet(packet, self)
