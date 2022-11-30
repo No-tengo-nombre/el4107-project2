@@ -22,7 +22,9 @@ def validate_user(db, conn):
     LOGGER.info(f"Received password {password}")
 
     try:
-        return db.validate_user(username, password)
+        validation_status = db.validate_user(username, password)
+        LOGGER.info(f"Validation status {validation_status}.")
+        return validation_status
     except UserNotFoundException:
         conn.send(f"User {username} was not found, would you like to create it? (y/n)".encode())
         answer = conn.recv(1024).decode().upper()
