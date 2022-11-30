@@ -73,7 +73,7 @@ class __UserDatabase:
     def save_db_file(self, db):
         LOGGER.info("Saving database file.")
         with open(self.db_file, "w") as file:
-            json.dump(db, file, cls=DateTimeEncoderDecoder)
+            json.dump(db, file, indent=2, cls=DateTimeEncoderDecoder)
 
     def register_user(self, username, password):
         LOGGER.info("Registering user.")
