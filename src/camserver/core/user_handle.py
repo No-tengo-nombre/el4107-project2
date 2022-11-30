@@ -7,6 +7,7 @@ def handle_user(db, user_conn, user_socket, camera_socket):
     if validate_user(db, user_conn):
         LOGGER.info("Successfuly validated user.")
         user_conn.send("@echo Successfuly validated user :)".encode())
+        user_conn.send("@break_while_loop".encode())
 
         recv_packet = camera_socket.recv(RECEIVING_WINDOW)
         user_conn.send(recv_packet)

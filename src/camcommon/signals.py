@@ -1,0 +1,1 @@
+SIGNAL_BREAK = 10
