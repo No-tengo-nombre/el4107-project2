@@ -1,4 +1,4 @@
-from camcommon import RECEIVING_WINDOW, END_AUTH_SUCCESS_STRING, END_AUTH_FAILURE_STRING
+from camcommon import RECEIVING_WINDOW
 from camcommon.logger import LOGGER
 from camserver.database.database import UserNotFoundException
 
