@@ -82,7 +82,7 @@ class __UserDatabase:
                 salt = str(uuid.uuid4())
                 self.db["users"][username] = {
                     "salt": salt,
-                    "password": _encrypt(password, salt),
+                    "password": _encrypt(password, salt).decode(),
                     "join_date": datetime.datetime.now(),
                 }
                 self.save_db_file(self.db)
