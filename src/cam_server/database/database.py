@@ -59,24 +59,24 @@ class __UserDatabase:
         return user
 
     def validate_user(self, username, password):
-        LOGGER.info("Validating user.")
+        LOGGER.info("Validating user")
         with self.mutex:
             self._update_db()
             user = self.user_exists(username)
             if user is not None:
-                LOGGER.info("Found user.")
+                LOGGER.info("Found user")
                 user_salt = user["salt"]
                 return _encrypt(password, user_salt) == user["password"].encode()
             else:
                 raise UserNotFoundException(username)
 
     def save_db_file(self, db):
-        LOGGER.info("Saving database file.")
+        LOGGER.info("Saving database file")
         with open(self.db_file, "w") as file:
             json.dump(db, file, indent=2, cls=DateTimeEncoderDecoder)
 
     def register_user(self, username, password):
-        LOGGER.info("Registering user.")
+        LOGGER.info("Registering user")
         with self.mutex:
             self._update_db()
             if self.user_exists(username) is not None:
