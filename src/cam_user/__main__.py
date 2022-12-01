@@ -1,5 +1,6 @@
 from cam_user.core.user_core import UserCore
 from cam_common.configs import FIXED_SERVER_IP, FIXED_SERVER_PORT
+from cam_common.logger import setup_logger
 import argparse
 
 
@@ -23,8 +24,29 @@ PARSER.add_argument(
     default=FIXED_SERVER_PORT,
     help="set the port of the server",
 )
+PARSER.add_argument(
+    "--quiet",
+    action="store_true",
+    help="run in quiet mode",
+)
+PARSER.add_argument(
+    "--debug",
+    action="store_true",
+    help="run in debug mode",
+)
+PARSER.add_argument(
+    "--verbose",
+    action="store_true",
+    help="run in verbose mode",
+)
+PARSER.add_argument(
+    "--logs",
+    action="store",
+    default="cam_user/logs/",
+    help="directory for the created logs",
+)
 args = PARSER.parse_args()
 
-
+setup_logger(args.quiet, args.debug, args.verbose, args.logs)
 c = UserCore(args.ip, args.port)
 c.start()
