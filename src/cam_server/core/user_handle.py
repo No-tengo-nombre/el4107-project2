@@ -11,8 +11,7 @@ def handle_user(db, user_conn, user_socket, camera_socket, user_port):
             user_conn.send("@echo Successfuly validated user :)".encode())
             user_conn.send("@break_while_loop".encode())
 
-            recv_packet = camera_socket.recv(RECEIVING_WINDOW)
-            user_conn.send(recv_packet)
+            handle_user_flow()
         else:
             LOGGER.info("Failed to validate user")
             user_conn.send("@kick Failed to validate the user :(".encode())
@@ -24,6 +23,10 @@ def handle_user(db, user_conn, user_socket, camera_socket, user_port):
         LOGGER.warning(f"Connection with user {user_conn} suddenly closed.")
     finally:
         PortAssigner.release_port(user_port)
+
+
+def handle_user_flow():
+    pass
 
 
 def validate_user(db, conn):
