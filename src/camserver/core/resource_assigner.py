@@ -26,3 +26,9 @@ class PortAssigner:
         except ValueError:
             return False
 
+    def __enter__(self):
+        self.__port = PortAssigner.get_port()
+        return self.__port
+
+    def __exit__(self, *_, **__):
+        PortAssigner.release_port(self.__port)
