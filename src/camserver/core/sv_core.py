@@ -77,28 +77,42 @@ class ServerCore:
 
     def start(self):
         while not self.__should_close:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as camera_s:
-                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
-                        s.bind(self.desc)
-                        camera_s.bind(FIXED_CAMERA_DESC)
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as camera_s:
+                        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
+                            s.bind(self.desc)
+                            # camera_s.bind(FIXED_CAMERA_DESC)
 
-                        # Receive the initial connection
-                        s.listen()
-                        LOGGER.info(f"Waiting for a connection, socket {s}")
-                        conn, addr = s.accept()
-                        LOGGER.info(f"Connection with {conn} accepted")
+                            # Receive the initial connection
+                            s.listen()
+                            LOGGER.info(f"Waiting for a connection, socket {s}")
+                            conn, addr = s.accept()
+                            LOGGER.info(f"Connection with {conn} accepted")
 
-                        # Redirect the connection to another port
-                        port = PortAssigner.get_port()
-                        client_s.bind((self.ip, port))
-                        client_s.listen()
-                        conn.send(f"@redirect_port {port}".encode())
+                            # Redirect the connection to another port
+                            port = PortAssigner.get_port()
+                            client_s.bind((self.ip, port))
+                            client_s.listen()
+                            conn.send(f"@redirect_port {port}".encode())
 
-                        # Accept the connection to the new port
-                        conn, addr = client_s.accept()
-                        LOGGER.info(f"Assigned {addr} to port {port}")
-                        conn.send(WELCOME_MSG.encode())
+                            # Accept the connection to the new port
+                            conn, addr = client_s.accept()
+                            LOGGER.info(f"Assigned {addr} to port {port}")
+                            conn.send(WELCOME_MSG.encode())
 
-                        user_thread = threading.Thread(target=handle_user, args=(self.db, conn, client_s, camera_s, port))
-                        user_thread.start()
+                            user_thread = threading.Thread(target=handle_user, args=(self.db, conn, client_s, camera_s, port))
+                            user_thread.start()
+
+            except:
+                LOGGER.warning("Closing server.")
+                self.close()
+
+            finally:
+                self.clean_up()
+
+    def close(self):
+        self.__should_close = True
+
+    def clean_up(self):
+        pass
