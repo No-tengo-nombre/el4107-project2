@@ -1,7 +1,7 @@
 import socket
 import threading
 
-from cam_common import FIXED_SERVER_IP, FIXED_SERVER_PORT, FIXED_CLIENT_PORT
+from cam_common import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT, DEFAULT_CLIENT_PORT
 from cam_common.logger import LOGGER
 from cam_server.core.user_handle import handle_user
 from cam_server.database.database import USER_DATABASE
@@ -42,7 +42,7 @@ WELCOME_MSG = r"""
 class ServerCore:
     db = USER_DATABASE
 
-    def __init__(self, ip=FIXED_SERVER_IP, port=FIXED_SERVER_PORT, client_port=FIXED_CLIENT_PORT):
+    def __init__(self, ip=DEFAULT_SERVER_IP, port=DEFAULT_SERVER_PORT, client_port=DEFAULT_CLIENT_PORT):
         self.__should_close = False
         self._ip = ip
         self._port = port

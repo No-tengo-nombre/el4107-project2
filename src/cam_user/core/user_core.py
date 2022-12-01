@@ -1,12 +1,12 @@
 import socket
 
-from cam_common import FIXED_SERVER_IP, FIXED_SERVER_PORT, RECEIVING_WINDOW
+from cam_common import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT, RECEIVING_WINDOW
 from cam_common.logger import LOGGER
 from cam_user.core.packet_handle import handle_packet, handle_auth, handle_reconnection
 
 
 class UserCore:
-    def __init__(self, ip=FIXED_SERVER_IP, port=FIXED_SERVER_PORT):
+    def __init__(self, ip=DEFAULT_SERVER_IP, port=DEFAULT_SERVER_PORT):
         self.__should_close = False
         self._ip = ip
         self._port = port

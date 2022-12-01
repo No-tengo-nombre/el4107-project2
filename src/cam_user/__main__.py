@@ -1,5 +1,5 @@
 from cam_user.core.user_core import UserCore
-from cam_common.configs import FIXED_SERVER_IP, FIXED_SERVER_PORT
+from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT
 from cam_common.logger import setup_logger
 import argparse
 
@@ -13,7 +13,7 @@ PARSER.add_argument(
     "--ip",
     action="store",
     type=str,
-    default=FIXED_SERVER_IP,
+    default=DEFAULT_SERVER_IP,
     help="set the ip of the server",
 )
 PARSER.add_argument(
@@ -21,7 +21,7 @@ PARSER.add_argument(
     "--port",
     action="store",
     type=int,
-    default=FIXED_SERVER_PORT,
+    default=DEFAULT_SERVER_PORT,
     help="set the port of the server",
 )
 PARSER.add_argument(
