@@ -1,5 +1,30 @@
 from camclient.core.client_core import ClientCore
+from camcommon.configs import FIXED_SERVER_IP, FIXED_SERVER_PORT
+import argparse
 
 
-c = ClientCore()
+DESC_STR = """Connect to the camgrill as a client."""
+
+
+PARSER = argparse.ArgumentParser(prog="camclient", description=DESC_STR)
+PARSER.add_argument(
+    "-i",
+    "--ip",
+    action="store",
+    type=str,
+    default=FIXED_SERVER_IP,
+    help="set the ip of the server",
+)
+PARSER.add_argument(
+    "-p",
+    "--port",
+    action="store",
+    type=int,
+    default=FIXED_SERVER_PORT,
+    help="set the port of the server",
+)
+args = PARSER.parse_args()
+
+
+c = ClientCore(args.ip, args.port)
 c.start()
