@@ -46,7 +46,7 @@ class ClientCore:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
                 # Accept the connection and redirect the port
                 s.connect(self.desc)
-                handle_reconnection(s, client_s)
+                handle_reconnection(s, client_s, self.ip)
 
                 # Receive the welcome message
                 welcome_msg = client_s.recv(RECEIVING_WINDOW)

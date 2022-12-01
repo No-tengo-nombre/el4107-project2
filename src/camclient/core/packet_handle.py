@@ -3,9 +3,14 @@ from camcommon.signals import SIGNAL_BREAK
 from getpass import getpass
 
 
-def handle_reconnection(sv_socket, client_socket):
+def handle_reconnection(sv_socket, client_socket, server_ip):
     packet = sv_socket.recv(RECEIVING_WINDOW)
-    signal = handle_command(packet.decode(), server_socket=sv_socket, client_socket=client_socket)
+    signal = handle_command(
+        packet.decode(),
+        server_socket=sv_socket,
+        client_socket=client_socket,
+        server_ip=server_ip,
+    )
 
 
 def handle_auth(sv_socket):
@@ -64,7 +69,7 @@ def __server_action_break_while_loop(*_, **__):
     return SIGNAL_BREAK
 
 
-def __server_action_redirect_port(args, server_socket, client_socket, **__):
+def __server_action_redirect_port(args, server_socket, client_socket, server_ip, **__):
     port = int(args[0])
     server_socket.close()
-    client_socket.connect((FIXED_SERVER_IP, port))
+    client_socket.connect((server_ip, port))
