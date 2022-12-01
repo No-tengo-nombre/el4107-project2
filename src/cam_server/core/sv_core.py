@@ -1,7 +1,7 @@
 import socket
 import threading
 
-from cam_common import FIXED_CAMERA_DESC, FIXED_SERVER_IP, FIXED_SERVER_PORT, FIXED_SERVER_DESC
+from cam_common import FIXED_SERVER_IP, FIXED_SERVER_PORT, FIXED_CLIENT_PORT
 from cam_common.logger import LOGGER
 from cam_server.core.user_handle import handle_user
 from cam_server.database.database import USER_DATABASE
@@ -42,10 +42,11 @@ WELCOME_MSG = r"""
 class ServerCore:
     db = USER_DATABASE
 
-    def __init__(self, ip=FIXED_SERVER_IP, port=FIXED_SERVER_PORT, ):
+    def __init__(self, ip=FIXED_SERVER_IP, port=FIXED_SERVER_PORT, client_port=FIXED_CLIENT_PORT):
         self.__should_close = False
         self._ip = ip
         self._port = port
+        self._client_port = client_port
         self._desc = (self.ip, self.port)
 
     @property
@@ -55,6 +56,10 @@ class ServerCore:
     @property
     def port(self):
         return self._port
+
+    @property
+    def client_port(self):
+        return self._client_port
 
     @property
     def desc(self):
@@ -70,6 +75,10 @@ class ServerCore:
         self._port = new_port
         self._desc = (self.ip, new_port)
 
+    @client_port.setter
+    def client_port(self, new_port):
+        self._client_port = new_port
+
     @desc.setter
     def desc(self, new_desc):
         self._desc = new_desc
@@ -77,7 +86,7 @@ class ServerCore:
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
-            client_s.bind((self.ip, self.port + 1))
+            client_s.bind((self.ip, self.client_port))
 
             # Receive the client connection
             client_s.listen()
