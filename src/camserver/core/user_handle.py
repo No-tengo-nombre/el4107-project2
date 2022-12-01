@@ -5,20 +5,23 @@ from camserver.core.resource_assigner import PortAssigner
 
 
 def handle_user(db, user_conn, user_socket, camera_socket, user_port):
-    if validate_user(db, user_conn):
-        LOGGER.info("Successfuly validated user.")
-        user_conn.send("@echo Successfuly validated user :)".encode())
-        user_conn.send("@break_while_loop".encode())
+    try:
+        if validate_user(db, user_conn):
+            LOGGER.info("Successfuly validated user.")
+            user_conn.send("@echo Successfuly validated user :)".encode())
+            user_conn.send("@break_while_loop".encode())
 
-        recv_packet = camera_socket.recv(RECEIVING_WINDOW)
-        user_conn.send(recv_packet)
-    else:
-        LOGGER.info("Failed to validate user.")
-        user_conn.send("@kick Failed to validate the user :(".encode())
+            recv_packet = camera_socket.recv(RECEIVING_WINDOW)
+            user_conn.send(recv_packet)
+        else:
+            LOGGER.info("Failed to validate user.")
+            user_conn.send("@kick Failed to validate the user :(".encode())
 
-        user_socket.close()
+            user_socket.close()
+            PortAssigner.release_port(user_port)
+            LOGGER.info("Finishing user thread.")
+    finally:
         PortAssigner.release_port(user_port)
-        LOGGER.info("Finishing user thread.")
 
 
 def validate_user(db, conn):
