@@ -169,3 +169,7 @@ poetry.toml
 **/.ssh/id_*
 **/.ssh/*_id_*
 **/.ssh/known_hosts
+
+
+### Project ###
+src/*/logs/*.txt
