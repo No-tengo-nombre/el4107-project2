@@ -1,11 +1,11 @@
 import socket
 import threading
 
-from camcommon import FIXED_CAMERA_DESC, FIXED_SERVER_IP, FIXED_SERVER_PORT, FIXED_SERVER_DESC
-from camcommon.logger import LOGGER
-from camserver.core.user_handle import handle_user
-from camserver.database.database import USER_DATABASE
-from camserver.core.resource_assigner import PortAssigner
+from cam_common import FIXED_CAMERA_DESC, FIXED_SERVER_IP, FIXED_SERVER_PORT, FIXED_SERVER_DESC
+from cam_common.logger import LOGGER
+from cam_server.core.user_handle import handle_user
+from cam_server.database.database import USER_DATABASE
+from cam_server.core.resource_assigner import PortAssigner
 
 
 WELCOME_MSG = r"""

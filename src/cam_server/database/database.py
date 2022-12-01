@@ -5,9 +5,9 @@ import json
 import threading
 import uuid
 
-from camserver.database.constants import USER_DATABASE_FILE
+from cam_server.database.constants import USER_DATABASE_FILE
 
-from camcommon.logger import LOGGER
+from cam_common.logger import LOGGER
 
 
 def _encrypt(password, salt):

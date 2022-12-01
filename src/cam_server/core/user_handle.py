@@ -1,7 +1,7 @@
-from camcommon import RECEIVING_WINDOW
-from camcommon.logger import LOGGER
-from camserver.database.database import UserNotFoundException
-from camserver.core.resource_assigner import PortAssigner
+from cam_common import RECEIVING_WINDOW
+from cam_common.logger import LOGGER
+from cam_server.database.database import UserNotFoundException
+from cam_server.core.resource_assigner import PortAssigner
 
 
 def handle_user(db, user_conn, user_socket, camera_socket, user_port):

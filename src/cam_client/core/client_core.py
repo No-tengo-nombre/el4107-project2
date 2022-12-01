@@ -1,7 +1,7 @@
 import socket
 
-from camcommon import FIXED_SERVER_DESC, FIXED_SERVER_IP, FIXED_SERVER_PORT, RECEIVING_WINDOW
-from camclient.core.packet_handle import handle_packet, handle_auth, handle_reconnection
+from cam_common import FIXED_SERVER_DESC, FIXED_SERVER_IP, FIXED_SERVER_PORT, RECEIVING_WINDOW
+from cam_client.core.packet_handle import handle_packet, handle_auth, handle_reconnection
 
 
 class ClientCore:

@@ -1,4 +1,4 @@
-from camcommon.logger import LOGGER
+from cam_common.logger import LOGGER
 
 
 class PortAssigner:

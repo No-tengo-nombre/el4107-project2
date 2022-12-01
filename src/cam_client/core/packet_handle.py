@@ -1,5 +1,5 @@
-from camcommon import RECEIVING_WINDOW, FIXED_SERVER_IP
-from camcommon.signals import SIGNAL_BREAK
+from cam_common import RECEIVING_WINDOW, FIXED_SERVER_IP
+from cam_common.signals import SIGNAL_BREAK
 from getpass import getpass
 
 
