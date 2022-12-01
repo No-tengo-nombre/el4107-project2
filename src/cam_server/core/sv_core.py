@@ -42,7 +42,7 @@ WELCOME_MSG = r"""
 class ServerCore:
     db = USER_DATABASE
 
-    def __init__(self, ip=FIXED_SERVER_IP, port=FIXED_SERVER_PORT):
+    def __init__(self, ip=FIXED_SERVER_IP, port=FIXED_SERVER_PORT, ):
         self.__should_close = False
         self._ip = ip
         self._port = port
@@ -76,40 +76,47 @@ class ServerCore:
         self._ip, self._port = new_desc
 
     def start(self):
-        while not self.__should_close:
-            try:
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as camera_s:
-                        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
-                            s.bind(self.desc)
-                            # camera_s.bind(FIXED_CAMERA_DESC)
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
+            client_s.bind((self.ip, self.port + 1))
 
-                            # Receive the initial connection
-                            s.listen()
-                            LOGGER.info(f"Waiting for a connection, socket {s}")
-                            conn, addr = s.accept()
+            # Receive the client connection
+            client_s.listen()
+            LOGGER.info("Waiting for client connection")
+            client_conn, client_addr = client_s.accept()
+            LOGGER.info(f"Connection with client {client_conn} accepted")
+
+            while not self.__should_close:
+                try:
+                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_recv_s:
+                        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_s:
+                            user_recv_s.bind(self.desc)
+
+                            # Receive the initial user connection
+                            user_recv_s.listen()
+                            LOGGER.info(f"Waiting for a user connection, socket {user_recv_s}")
+                            conn, addr = user_recv_s.accept()
                             LOGGER.info(f"Connection with {conn} accepted")
 
                             # Redirect the connection to another port
                             port = PortAssigner.get_port()
-                            client_s.bind((self.ip, port))
-                            client_s.listen()
+                            user_s.bind((self.ip, port))
+                            user_s.listen()
                             conn.send(f"@redirect_port {port}".encode())
 
                             # Accept the connection to the new port
-                            conn, addr = client_s.accept()
+                            conn, addr = user_s.accept()
                             LOGGER.info(f"Assigned {addr} to port {port}")
                             conn.send(WELCOME_MSG.encode())
 
-                            user_thread = threading.Thread(target=handle_user, args=(self.db, conn, client_s, camera_s, port))
+                            user_thread = threading.Thread(target=handle_user, args=(self.db, conn, user_s, client_s, port))
                             user_thread.start()
 
-            except:
-                LOGGER.warning("Closing server.")
-                self.close()
+                except:
+                    LOGGER.warning("Closing server.")
+                    self.close()
 
-            finally:
-                self.clean_up()
+                finally:
+                    self.clean_up()
 
     def close(self):
         self.__should_close = True
