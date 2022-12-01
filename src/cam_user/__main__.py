@@ -1,4 +1,4 @@
-from cam_client.core.client_core import ClientCore
+from cam_user.core.client_core import ClientCore
 from cam_common.configs import FIXED_SERVER_IP, FIXED_SERVER_PORT
 import argparse
 
@@ -6,7 +6,7 @@ import argparse
 DESC_STR = """Connect to the camgrill as a client."""
 
 
-PARSER = argparse.ArgumentParser(prog="cam_client", description=DESC_STR)
+PARSER = argparse.ArgumentParser(prog="cam_user", description=DESC_STR)
 PARSER.add_argument(
     "-i",
     "--ip",
