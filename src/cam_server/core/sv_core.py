@@ -99,20 +99,26 @@ class ServerCore:
 
                             # Redirect the connection to another port
                             port = PortAssigner.get_port()
-                            user_s.bind((self.ip, port))
-                            user_s.listen()
-                            conn.send(f"@redirect_port {port}".encode())
+                            try:
+                                user_s.bind((self.ip, port))
+                                user_s.listen()
+                                conn.send(f"@redirect_port {port}".encode())
 
-                            # Accept the connection to the new port
-                            conn, addr = user_s.accept()
-                            LOGGER.info(f"Assigned {addr} to port {port}")
-                            conn.send(WELCOME_MSG.encode())
+                                # Accept the connection to the new port
+                                conn, addr = user_s.accept()
+                                LOGGER.info(f"Assigned {addr} to port {port}")
+                                conn.send(WELCOME_MSG.encode())
 
-                            user_thread = threading.Thread(target=handle_user, args=(self.db, conn, user_s, client_s, port))
-                            user_thread.start()
+                                user_thread = threading.Thread(target=handle_user, args=(self.db, conn, user_s, client_s, port))
+                                user_thread.start()
+                            except:
+                                LOGGER.warning(f"Error asigning user to port {port}")
+                            finally:
+                                # Release the port once it fails
+                                PortAssigner.release_port(port)
 
                 except:
-                    LOGGER.warning("Closing server.")
+                    LOGGER.warning("Closing server")
                     self.close()
 
                 finally:
