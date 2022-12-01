@@ -1,9 +1,10 @@
 from camcommon import RECEIVING_WINDOW
 from camcommon.logger import LOGGER
 from camserver.database.database import UserNotFoundException
+from camserver.core.resource_assigner import PortAssigner
 
 
-def handle_user(db, user_conn, user_socket, camera_socket):
+def handle_user(db, user_conn, user_socket, camera_socket, user_port):
     if validate_user(db, user_conn):
         LOGGER.info("Successfuly validated user.")
         user_conn.send("@echo Successfuly validated user :)".encode())
@@ -16,6 +17,7 @@ def handle_user(db, user_conn, user_socket, camera_socket):
         user_conn.send("@kick Failed to validate the user :(".encode())
 
         user_socket.close()
+        PortAssigner.release_port(user_port)
         LOGGER.info("Finishing user thread.")
 
 
