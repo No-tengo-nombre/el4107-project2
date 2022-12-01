@@ -28,12 +28,15 @@ def handle_packet(packet, client):
 
 # Available commands
 # ==================
-# echo ARGS         -> Print to the user's console.
-# input ARGS        -> Print ARGS and get user input.
-# hidden_input ARGS -> Print ARGS and get user input,
-#                      without showing input to console.
-# kick ARGS         -> Kick the user, showing ARGS as the
-#                      reason.
+# echo ARGS             -> Print to the user's console.
+# input ARGS            -> Print ARGS and get user input.
+# hidden_input ARGS     -> Print ARGS and get user input,
+#                          without showing input to console.
+# kick ARGS             -> Kick the user, showing ARGS as the
+#                          reason.
+# break_while_loop      -> Send a signal to break a while loop.
+# redirect_port [PORT]  -> Redirect the port that the user is
+#                          connected to.
 
 
 def __server_action_echo(args, **_):
