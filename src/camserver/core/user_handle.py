@@ -20,6 +20,8 @@ def handle_user(db, user_conn, user_socket, camera_socket, user_port):
             user_socket.close()
             PortAssigner.release_port(user_port)
             LOGGER.info("Finishing user thread.")
+    except:
+        LOGGER.warning(f"Connection with user {user_conn} suddenly closed.")
     finally:
         PortAssigner.release_port(user_port)
 
