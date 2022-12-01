@@ -1,4 +1,5 @@
 from cam_common import RECEIVING_WINDOW, FIXED_SERVER_IP
+from cam_common.logger import LOGGER
 from cam_common.signals import SIGNAL_BREAK
 from getpass import getpass
 
@@ -16,18 +17,21 @@ def handle_reconnection(sv_socket, client_socket, server_ip):
 def handle_auth(sv_socket):
     while True:
         packet = sv_socket.recv(RECEIVING_WINDOW)
+        LOGGER.debug("Received authentication packet")
         signal = handle_command(packet.decode(), server_socket=sv_socket)
         if signal == SIGNAL_BREAK:
             break
 
 
 def handle_command(cmd, *handle_args, **handle_kwargs):
+    LOGGER.debug("Handling server command")
     action, *args = cmd.split(" ")
     if action[0] == "@":
         globals()[f"__server_action_{action[1:]}"](args, *handle_args, **handle_kwargs)
 
 
 def handle_packet(packet, client):
+    LOGGER.debug("Received packet")
     client.close()
 
 

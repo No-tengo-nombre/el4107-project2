@@ -1,10 +1,11 @@
 import socket
 
 from cam_common import FIXED_SERVER_DESC, FIXED_SERVER_IP, FIXED_SERVER_PORT, RECEIVING_WINDOW
+from cam_common.logger import LOGGER
 from cam_user.core.packet_handle import handle_packet, handle_auth, handle_reconnection
 
 
-class ClientCore:
+class UserCore:
     def __init__(self, ip=FIXED_SERVER_IP, port=FIXED_SERVER_PORT):
         self.__should_close = False
         self._ip = ip
@@ -42,18 +43,23 @@ class ClientCore:
         self.__should_close = True
 
     def start(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as initial_s:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as reconn_s:
                 # Accept the connection and redirect the port
-                s.connect(self.desc)
-                handle_reconnection(s, client_s, self.ip)
+                LOGGER.info("Connecting to the initial socket")
+                initial_s.connect(self.desc)
+                LOGGER.info("Redirecting connection")
+                handle_reconnection(initial_s, reconn_s, self.ip)
 
                 # Receive the welcome message
-                welcome_msg = client_s.recv(RECEIVING_WINDOW)
+                welcome_msg = reconn_s.recv(RECEIVING_WINDOW)
                 print(welcome_msg.decode())
 
                 # Authenticate and receive stuff
-                handle_auth(client_s)
+                LOGGER.info("Authenticating")
+                handle_auth(reconn_s)
+
+                LOGGER.info("Finished authentication, going to main information flow")
                 while not self.__should_close:
-                    packet = client_s.recv(RECEIVING_WINDOW)
+                    packet = reconn_s.recv(RECEIVING_WINDOW)
                     handle_packet(packet, self)

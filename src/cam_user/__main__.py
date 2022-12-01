@@ -1,4 +1,4 @@
-from cam_user.core.client_core import ClientCore
+from cam_user.core.user_core import UserCore
 from cam_common.configs import FIXED_SERVER_IP, FIXED_SERVER_PORT
 import argparse
 
@@ -26,5 +26,5 @@ PARSER.add_argument(
 args = PARSER.parse_args()
 
 
-c = ClientCore(args.ip, args.port)
+c = UserCore(args.ip, args.port)
 c.start()
