@@ -1,7 +1,7 @@
 import socket
 
-from camcommon import FIXED_SERVER_DESC, RECEIVING_WINDOW
-from camclient.core.packet_handle import handle_packet, handle_auth
+from camcommon import FIXED_SERVER_DESC, FIXED_SERVER_IP, RECEIVING_WINDOW
+from camclient.core.packet_handle import handle_packet, handle_auth, handle_reconnection
 
 
 class ClientCore:
@@ -13,11 +13,17 @@ class ClientCore:
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect(FIXED_SERVER_DESC)
-            welcome_msg = s.recv(RECEIVING_WINDOW)
-            print(welcome_msg.decode())
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
+                # Accept the connection and redirect the port
+                s.connect(FIXED_SERVER_DESC)
+                handle_reconnection(s, client_s)
 
-            handle_auth(s)
-            while not self.__should_close:
-                packet = s.recv(RECEIVING_WINDOW)
-                handle_packet(packet, self)
+                # Receive the welcome message
+                welcome_msg = client_s.recv(RECEIVING_WINDOW)
+                print(welcome_msg.decode())
+
+                # Authenticate and receive stuff
+                handle_auth(client_s)
+                while not self.__should_close:
+                    packet = client_s.recv(RECEIVING_WINDOW)
+                    handle_packet(packet, self)
