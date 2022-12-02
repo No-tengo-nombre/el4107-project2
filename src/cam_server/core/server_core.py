@@ -126,9 +126,6 @@ class ServerCore:
                                 user_thread.start()
                             except Exception as e:
                                 LOGGER.warning(f"Error assigning user to port {port}, found exception {e}")
-                            # finally:
-                            #     # Release the port once it fails
-                            #     PortAssigner.release_port(port)
 
         except Exception as e:
             LOGGER.warning(f"Closing server, found exception {e}")
