@@ -62,4 +62,4 @@ class UserCore:
                 LOGGER.info("Finished authentication, going to main information flow")
                 while not self.__should_close:
                     packet = reconn_s.recv(RECEIVING_WINDOW)
-                    handle_packet(self, packet)
+                    handle_packet(self, packet.decode())
