@@ -59,7 +59,7 @@ PARSER.add_argument(
 PARSER.add_argument(
     "--logs",
     action="store",
-    default="cam_user/logs/",
+    default="cam_client/logs/",
     help="directory for the created logs",
 )
 args = PARSER.parse_args()
