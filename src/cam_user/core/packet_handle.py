@@ -3,6 +3,8 @@ from cam_common.logger import LOGGER
 from cam_common.signals import SIGNAL_BREAK
 from getpass import getpass
 
+import webbrowser
+
 
 def handle_reconnection(sv_socket, client_socket, server_ip):
     packet = sv_socket.recv(RECEIVING_WINDOW)
@@ -49,22 +51,22 @@ def handle_packet(packet, client):
 #                          connected to.
 
 
-def __server_action_echo(args, **_):
+def __server_action_echo(args, *_, **__):
     print(*args)
 
 
-def __server_action_input(args, server_socket, **__):
+def __server_action_input(args, server_socket, *_, **__):
     print(*args)
     print(">>> ", end="")
     server_socket.send(input().encode())
 
 
-def __server_action_hidden_input(args, server_socket, **__):
+def __server_action_hidden_input(args, server_socket, *_, **__):
     print(*args)
     server_socket.send(getpass(">>> ").encode())
 
 
-def __server_action_kick(args, server_socket, **__):
+def __server_action_kick(args, server_socket, *_, **__):
     print(*args)
     server_socket.close()
     quit()
@@ -79,3 +81,7 @@ def __server_action_redirect_port(args, server_socket, client_socket, server_ip,
     LOGGER.debug(f"Redirecting connection to {server_ip}:{port}")
     server_socket.close()
     client_socket.connect((server_ip, port))
+
+
+def __server_action_webbrowser_new_tab(args, *_, **__):
+    webbrowser.get().open_new_tab(args[0])
