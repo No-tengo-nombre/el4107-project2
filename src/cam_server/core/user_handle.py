@@ -11,6 +11,8 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
         if validate_user(db, user_conn):
             LOGGER.info("Successfuly validated user")
             user_conn.send("@echo Successfuly validated user :)".encode())
+            user_conn.send("@echo Successfuly validated user 2 :)".encode())
+            user_conn.send("@echo Successfuly validated user 3 :)".encode())
             user_conn.send("@break_while_loop".encode())
 
             handle_user_flow(server, user_conn)
