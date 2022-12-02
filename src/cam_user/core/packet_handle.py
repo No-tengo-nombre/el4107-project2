@@ -21,7 +21,7 @@ def handle_auth(user, sv_socket):
     while True:
         packet = sv_socket.recv(RECEIVING_WINDOW)
         LOGGER.debug("Received authentication packet")
-        signal = handle_command(packet.decode(), user=user, server_socket=sv_socket)
+        signal = handle_command(user, packet.decode(), server_socket=sv_socket)
         if signal is not None:
             LOGGER.debug(f"Got signal {signal}")
         if signal == SIGNAL_BREAK:
@@ -43,7 +43,7 @@ def handle_command(user, cmd, *handle_args, **handle_kwargs):
 
 def handle_packet(user, packet):
     LOGGER.debug("Received packet")
-    user.close()
+    handle_command(user, packet)
 
 
 # Available commands
