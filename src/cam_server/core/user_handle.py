@@ -32,10 +32,11 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
 def handle_user_flow(server, user_conn, user_socket, client_conn, client_socket, user_port):
     LOGGER.info(f"Sending connection request")
     user_conn.send(f"@webbrowser_new_tab http:// $ip {user_port}".encode())
+    LOGGER.info("Receiving connection request confirmation")
     user_conn.recv(RECEIVING_WINDOW)
 
+    LOGGER.info("Received confirmation, moving to packet redirection")
     while True:
-
         LOGGER.debug("Listening for user packet")
         packet = user_conn.recv(RECEIVING_WINDOW)
         LOGGER.debug("Sending packet to client")
