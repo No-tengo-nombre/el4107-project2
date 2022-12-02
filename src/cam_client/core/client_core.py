@@ -1,11 +1,11 @@
-from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT, LOCAL_CAMERA_IP, LOCAL_CAMERA_PORT, RECEIVING_WINDOW
+from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_CLIENT_PORT, LOCAL_CAMERA_IP, LOCAL_CAMERA_PORT, RECEIVING_WINDOW
+from cam_common.logger import LOGGER
 
-import http.client
 import socket
 
 
 class ClientCore:
-    def __init__(self, server_ip=DEFAULT_SERVER_IP, server_port=DEFAULT_SERVER_PORT,
+    def __init__(self, server_ip=DEFAULT_SERVER_IP, server_port=DEFAULT_CLIENT_PORT,
         target_ip=LOCAL_CAMERA_IP, target_port=LOCAL_CAMERA_PORT
     ) -> None:
         self.__should_close = False
@@ -74,12 +74,20 @@ class ClientCore:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_s:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as target_s:
                 # Connect to the server and target
+                LOGGER.info("Connecting to server")
                 server_s.connect(self.server_desc)
+                LOGGER.info("Connecting to target")
                 target_s.connect(self.target_desc)
 
+                LOGGER.info("Initializing proxy")
                 while not self.__should_close:
                     # Act as a proxy
+                    LOGGER.debug("Listening for server packet")
                     packet = server_s.recv(RECEIVING_WINDOW)
+                    LOGGER.debug("Sending packet to target")
                     target_s.send(packet)
+                    LOGGER.debug("Listening for target packet")
                     response = target_s.recv(RECEIVING_WINDOW)
+                    LOGGER.debug("Sending packet to server")
                     server_s.send(response)
+                LOGGER.info("Finished connection")
