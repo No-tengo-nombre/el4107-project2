@@ -124,8 +124,8 @@ class ServerCore:
 
                                 user_thread = threading.Thread(target=handle_user, args=(self.db, conn, user_s, client_conn, client_s, port))
                                 user_thread.start()
-                            except:
-                                LOGGER.warning(f"Error asigning user to port {port}")
+                            except Exception as e:
+                                LOGGER.warning(f"Error assigning user to port {port}, found exception {e}")
                             finally:
                                 # Release the port once it fails
                                 PortAssigner.release_port(port)
