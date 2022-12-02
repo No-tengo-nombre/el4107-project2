@@ -4,7 +4,7 @@ from cam_server.database.database import UserNotFoundException
 from cam_server.core.resource_assigner import PortAssigner
 
 
-def handle_user(db, user_conn, user_socket, camera_socket, user_port):
+def handle_user(db, user_conn, user_socket, client_conn, client_socket, user_port):
     try:
         if validate_user(db, user_conn):
             LOGGER.info("Successfuly validated user")

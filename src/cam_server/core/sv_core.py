@@ -92,7 +92,7 @@ class ServerCore:
             client_s.listen()
             LOGGER.info("Waiting for client connection")
             client_conn, client_addr = client_s.accept()
-            LOGGER.info(f"Connection with client {client_conn} accepted")
+            LOGGER.info(f"Connection with client {client_addr} accepted")
 
             while not self.__should_close:
                 try:
@@ -118,7 +118,7 @@ class ServerCore:
                                 LOGGER.info(f"Assigned {addr} to port {port}")
                                 conn.send(WELCOME_MSG.encode())
 
-                                user_thread = threading.Thread(target=handle_user, args=(self.db, conn, user_s, client_s, port))
+                                user_thread = threading.Thread(target=handle_user, args=(self.db, conn, user_s, client_conn, client_s, port))
                                 user_thread.start()
                             except:
                                 LOGGER.warning(f"Error asigning user to port {port}")
