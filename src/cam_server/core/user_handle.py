@@ -1,4 +1,4 @@
-from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT
+from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT, RECEIVING_WINDOW
 from cam_common.logger import LOGGER
 from cam_server.database.database import UserNotFoundException
 from cam_server.core.resource_assigner import PortAssigner
@@ -11,9 +11,13 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
         if validate_user(db, user_conn):
             LOGGER.info("Successfuly validated user")
             user_conn.send("@echo Successfuly validated user :)".encode())
+            user_conn.recv(RECEIVING_WINDOW)
             user_conn.send("@echo Successfuly validated user 2 :)".encode())
+            user_conn.recv(RECEIVING_WINDOW)
             user_conn.send("@echo Successfuly validated user 3 :)".encode())
+            user_conn.recv(RECEIVING_WINDOW)
             user_conn.send("@break_while_loop".encode())
+            user_conn.recv(RECEIVING_WINDOW)
 
             handle_user_flow(server, user_conn)
         else:
@@ -36,11 +40,11 @@ def handle_user_flow(server, user_conn):
 
 def validate_user(db, conn):
     conn.send("@input Enter username".encode())
-    username = conn.recv(1024).decode()
+    username = conn.recv(RECEIVING_WINDOW).decode()
     LOGGER.info(f"Received username {username}")
 
     conn.send("@hidden_input Enter password".encode())
-    password = conn.recv(1024).decode()
+    password = conn.recv(RECEIVING_WINDOW).decode()
     LOGGER.info("Received password")
 
     try:
@@ -49,7 +53,7 @@ def validate_user(db, conn):
         return validation_status
     except UserNotFoundException:
         conn.send(f"@input User {username} was not found, would you like to create it? (y/n): ".encode())
-        answer = conn.recv(1024).decode().upper()
+        answer = conn.recv(RECEIVING_WINDOW).decode().upper()
         if answer == "Y":
             db.register_user(username, password)
             conn.send(f"@echo Registered user {username}. Welcome!".encode())

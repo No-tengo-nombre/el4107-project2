@@ -25,6 +25,7 @@ def handle_auth(sv_socket):
             LOGGER.debug(f"Got signal {signal}")
         if signal == SIGNAL_BREAK:
             LOGGER.debug("Breaking authentication loop")
+            sv_socket.send("OK".encode())
             break
 
 
@@ -53,8 +54,9 @@ def handle_packet(packet, client):
 #                          connected to.
 
 
-def __server_action_echo(args, *_, **__):
+def __server_action_echo(args, server_socket, *_, **__):
     print(*args)
+    server_socket.send("OK".encode())
 
 
 def __server_action_input(args, server_socket, *_, **__):
