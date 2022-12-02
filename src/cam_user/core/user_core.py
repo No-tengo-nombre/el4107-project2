@@ -57,7 +57,7 @@ class UserCore:
 
                 # Authenticate and receive stuff
                 LOGGER.info("Authenticating")
-                handle_auth(reconn_s)
+                handle_auth(reconn_s, self)
 
                 LOGGER.info("Finished authentication, going to main information flow")
                 while not self.__should_close:

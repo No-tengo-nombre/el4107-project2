@@ -16,11 +16,11 @@ def handle_reconnection(sv_socket, client_socket, server_ip):
     )
 
 
-def handle_auth(sv_socket):
+def handle_auth(sv_socket, user):
     while True:
         packet = sv_socket.recv(RECEIVING_WINDOW)
         LOGGER.debug("Received authentication packet")
-        signal = handle_command(packet.decode(), server_socket=sv_socket)
+        signal = handle_command(packet.decode(), user=user, server_socket=sv_socket)
         if signal is not None:
             LOGGER.debug(f"Got signal {signal}")
         if signal == SIGNAL_BREAK:
@@ -29,16 +29,20 @@ def handle_auth(sv_socket):
             break
 
 
-def handle_command(cmd, *handle_args, **handle_kwargs):
+def handle_command(cmd, user, *handle_args, **handle_kwargs):
     LOGGER.debug("Handling server command")
     action, *args = cmd.split(" ")
+    for i, a in enumerate(args):
+        if a[0] == "$":
+            args[i] = getattr(user, a[1:])
+    
     if action[0] == "@":
         return globals()[f"__server_action_{action[1:]}"](args, *handle_args, **handle_kwargs)
 
 
-def handle_packet(packet, client):
+def handle_packet(packet, user):
     LOGGER.debug("Received packet")
-    client.close()
+    user.close()
 
 
 # Available commands
@@ -88,4 +92,6 @@ def __server_action_redirect_port(args, server_socket, client_socket, server_ip,
 
 
 def __server_action_webbrowser_new_tab(args, *_, **__):
-    webbrowser.get().open_new_tab(args[0])
+    address = f"{''.join(args[:-1])}:{args[-1]}"
+    LOGGER.info(f"Received connection request to {address}")
+    webbrowser.get().open_new_tab(address)

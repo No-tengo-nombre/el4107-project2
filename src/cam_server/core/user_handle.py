@@ -12,10 +12,6 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
             LOGGER.info("Successfuly validated user")
             user_conn.send("@echo Successfuly validated user :)".encode())
             user_conn.recv(RECEIVING_WINDOW)
-            user_conn.send("@echo Successfuly validated user 2 :)".encode())
-            user_conn.recv(RECEIVING_WINDOW)
-            user_conn.send("@echo Successfuly validated user 3 :)".encode())
-            user_conn.recv(RECEIVING_WINDOW)
             user_conn.send("@break_while_loop".encode())
             user_conn.recv(RECEIVING_WINDOW)
 
@@ -34,8 +30,8 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
 
 
 def handle_user_flow(server, user_conn):
-    user_conn.send(f"@webbrowser_new_tab http://{server.ip}:{server.port}".encode())
-    # webbrowser.get().open_new_tab(f"http://{DEFAULT_SERVER_IP}:{DEFAULT_SERVER_PORT}")
+    LOGGER.info(f"Sending connection request")
+    user_conn.send(f"@webbrowser_new_tab http:// $ip {server.port}".encode())
 
 
 def validate_user(db, conn):
