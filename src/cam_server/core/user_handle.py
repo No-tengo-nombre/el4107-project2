@@ -39,6 +39,8 @@ def handle_user_flow(server, user_conn, user_socket, client_conn, client_socket,
     while True:
         LOGGER.debug("Listening for user packet")
         packet = user_conn.recv(RECEIVING_WINDOW)
+        print("RECEIVED PACKETAS DFSAF SAD FSDF SD")
+        print(packet.decode())
         LOGGER.debug("Sending packet to client")
         client_conn.send(packet)
         LOGGER.debug("Listening for client packet")
