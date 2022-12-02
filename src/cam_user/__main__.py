@@ -4,7 +4,7 @@ from cam_common.logger import setup_logger
 import argparse
 
 
-DESC_STR = """Connect to the camgrill as a client."""
+DESC_STR = """Connect to the camgrill as a user."""
 
 
 PARSER = argparse.ArgumentParser(prog="cam_user", description=DESC_STR)
