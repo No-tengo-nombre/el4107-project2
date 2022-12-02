@@ -87,6 +87,7 @@ class ServerCore:
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
             # Leave the IP blank to receive from public IP
+            client_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             client_s.bind(("", self.client_port))
 
             # Receive the client connection
@@ -100,6 +101,7 @@ class ServerCore:
                     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_recv_s:
                         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_s:
                             # Leave the IP blank to receive from public IP
+                            user_recv_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                             user_recv_s.bind(("", self.port))
 
                             # Receive the initial user connection
