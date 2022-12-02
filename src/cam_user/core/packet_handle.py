@@ -75,5 +75,6 @@ def __server_action_break_while_loop(*_, **__):
 
 def __server_action_redirect_port(args, server_socket, client_socket, server_ip, **__):
     port = int(args[0])
+    LOGGER.debug(f"Redirecting connection to {server_ip}:{port}")
     server_socket.close()
     client_socket.connect((server_ip, port))
