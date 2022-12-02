@@ -85,19 +85,19 @@ class ServerCore:
         self._ip, self._port = new_desc
 
     def start(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
-            # Leave the IP blank to receive from public IP
-            client_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            client_s.bind(("", self.client_port))
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
+                # Leave the IP blank to receive from public IP
+                client_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                client_s.bind(("", self.client_port))
 
-            # Receive the client connection
-            client_s.listen()
-            LOGGER.info("Waiting for client connection")
-            client_conn, client_addr = client_s.accept()
-            LOGGER.info(f"Connection with client {client_addr} accepted")
+                # Receive the client connection
+                client_s.listen()
+                LOGGER.info("Waiting for client connection")
+                client_conn, client_addr = client_s.accept()
+                LOGGER.info(f"Connection with client {client_addr} accepted")
 
-            while not self.__should_close:
-                try:
+                while not self.__should_close:
                     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_recv_s:
                         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_s:
                             # Leave the IP blank to receive from public IP
@@ -130,12 +130,12 @@ class ServerCore:
                                 # Release the port once it fails
                                 PortAssigner.release_port(port)
 
-                except:
-                    LOGGER.warning("Closing server")
-                    self.close()
+        except:
+            LOGGER.warning("Closing server")
+            self.close()
 
-                finally:
-                    self.clean_up()
+        finally:
+            self.clean_up()
 
     def close(self):
         self.__should_close = True

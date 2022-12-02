@@ -71,17 +71,17 @@ class ClientCore:
         self._target_ip, self._target_port = new_target_desc
 
     def start(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_s:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as target_s:
-                # Connect to the server and target
-                LOGGER.info("Connecting to server")
-                server_s.connect(self.server_desc)
-                LOGGER.info("Connecting to target")
-                target_s.connect(self.target_desc)
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_s:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as target_s:
+                    # Connect to the server and target
+                    LOGGER.info("Connecting to server")
+                    server_s.connect(self.server_desc)
+                    LOGGER.info("Connecting to target")
+                    target_s.connect(self.target_desc)
 
-                LOGGER.info("Initializing proxy")
-                while not self.__should_close:
-                    try:
+                    LOGGER.info("Initializing proxy")
+                    while not self.__should_close:
                         # Act as a proxy
                         LOGGER.debug("Listening for server packet")
                         packet = server_s.recv(RECEIVING_WINDOW)
@@ -91,13 +91,13 @@ class ClientCore:
                         response = target_s.recv(RECEIVING_WINDOW)
                         LOGGER.debug("Sending packet to server")
                         server_s.send(response)
-                    except:
-                        LOGGER.warning("Closing client")
-                        self.close()
-                    finally:
-                        self.clean_up()
+                    LOGGER.info("Finished connection")
 
-                LOGGER.info("Finished connection")
+        except:
+            LOGGER.warning("Closing client")
+            self.close()
+        finally:
+            self.clean_up()
 
     def close(self):
         self.__should_close = True
