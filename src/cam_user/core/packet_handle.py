@@ -95,5 +95,5 @@ def __server_action_redirect_port(args, server_socket, client_socket, server_ip,
 def __server_action_webbrowser_new_tab(args, server_socket, *_, **__):
     address = f"{''.join(args[:-1])}:{args[-1]}"
     LOGGER.info(f"Received connection request to {address}")
-    webbrowser.get().open_new_tab(address)
     server_socket.send("OK".encode())
+    webbrowser.get().open_new_tab(address)
