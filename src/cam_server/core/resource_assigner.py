@@ -1,9 +1,9 @@
+from cam_common.configs import PORTS_FOR_USERS
 from cam_common.logger import LOGGER
 
 
 class PortAssigner:
-    __ALL_PORTS = list(range(10032, 10040))
-    __free_ports = __ALL_PORTS.copy()
+    __free_ports = PORTS_FOR_USERS.copy()
     __used_ports = []
 
     @staticmethod
