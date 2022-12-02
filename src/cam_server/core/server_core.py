@@ -1,7 +1,7 @@
 import socket
 import threading
 
-from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT, DEFAULT_CLIENT_PORT
+from cam_common.configs import DEFAULT_SERVER_PORT, DEFAULT_CLIENT_PORT
 from cam_common.logger import LOGGER
 from cam_server.core.user_handle import handle_user
 from cam_server.database.database import USER_DATABASE

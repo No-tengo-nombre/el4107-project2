@@ -1,4 +1,4 @@
-from cam_server.core.sv_core import ServerCore
+from cam_server.core.server_core import ServerCore
 from cam_common.logger import setup_logger
 from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT
 import argparse
