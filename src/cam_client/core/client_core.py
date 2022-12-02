@@ -81,13 +81,26 @@ class ClientCore:
 
                 LOGGER.info("Initializing proxy")
                 while not self.__should_close:
-                    # Act as a proxy
-                    LOGGER.debug("Listening for server packet")
-                    packet = server_s.recv(RECEIVING_WINDOW)
-                    LOGGER.debug("Sending packet to target")
-                    target_s.send(packet)
-                    LOGGER.debug("Listening for target packet")
-                    response = target_s.recv(RECEIVING_WINDOW)
-                    LOGGER.debug("Sending packet to server")
-                    server_s.send(response)
+                    try:
+                        # Act as a proxy
+                        LOGGER.debug("Listening for server packet")
+                        packet = server_s.recv(RECEIVING_WINDOW)
+                        LOGGER.debug("Sending packet to target")
+                        target_s.send(packet)
+                        LOGGER.debug("Listening for target packet")
+                        response = target_s.recv(RECEIVING_WINDOW)
+                        LOGGER.debug("Sending packet to server")
+                        server_s.send(response)
+                    except:
+                        LOGGER.warning("Closing client")
+                        self.close()
+                    finally:
+                        self.clean_up()
+
                 LOGGER.info("Finished connection")
+
+    def close(self):
+        self.__should_close = True
+
+    def clean_up(self):
+        pass
