@@ -130,8 +130,8 @@ class ServerCore:
                                 # Release the port once it fails
                                 PortAssigner.release_port(port)
 
-        except:
-            LOGGER.warning("Closing server")
+        except Exception as e:
+            LOGGER.warning(f"Closing server, found exception {e}")
             self.close()
 
         finally:
