@@ -65,5 +65,5 @@ PARSER.add_argument(
 args = PARSER.parse_args()
 
 setup_logger(args.quiet, args.debug, args.verbose, args.logs)
-c = ClientCore(args.ip, args.port, args.target_ip, args.target_port)
+c = ClientCore(args.ip, args.server_port, args.target_ip, args.target_port)
 c.start()
