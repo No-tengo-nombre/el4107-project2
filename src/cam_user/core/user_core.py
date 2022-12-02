@@ -49,7 +49,7 @@ class UserCore:
                 LOGGER.info("Connecting to the initial socket")
                 initial_s.connect(self.desc)
                 LOGGER.info("Redirecting connection")
-                handle_reconnection(initial_s, reconn_s, self.ip)
+                handle_reconnection(self, initial_s, reconn_s, self.ip)
 
                 # Receive the welcome message
                 welcome_msg = reconn_s.recv(RECEIVING_WINDOW)
@@ -57,9 +57,9 @@ class UserCore:
 
                 # Authenticate and receive stuff
                 LOGGER.info("Authenticating")
-                handle_auth(reconn_s, self)
+                handle_auth(self, reconn_s)
 
                 LOGGER.info("Finished authentication, going to main information flow")
                 while not self.__should_close:
                     packet = reconn_s.recv(RECEIVING_WINDOW)
-                    handle_packet(packet, self)
+                    handle_packet(self, packet)

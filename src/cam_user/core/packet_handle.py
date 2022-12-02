@@ -6,9 +6,10 @@ from getpass import getpass
 import webbrowser
 
 
-def handle_reconnection(sv_socket, client_socket, server_ip):
+def handle_reconnection(user, sv_socket, client_socket, server_ip):
     packet = sv_socket.recv(RECEIVING_WINDOW)
     signal = handle_command(
+        user,
         packet.decode(),
         server_socket=sv_socket,
         client_socket=client_socket,
@@ -16,7 +17,7 @@ def handle_reconnection(sv_socket, client_socket, server_ip):
     )
 
 
-def handle_auth(sv_socket, user):
+def handle_auth(user, sv_socket):
     while True:
         packet = sv_socket.recv(RECEIVING_WINDOW)
         LOGGER.debug("Received authentication packet")
@@ -29,7 +30,7 @@ def handle_auth(sv_socket, user):
             break
 
 
-def handle_command(cmd, user, *handle_args, **handle_kwargs):
+def handle_command(user, cmd, *handle_args, **handle_kwargs):
     LOGGER.debug("Handling server command")
     action, *args = cmd.split(" ")
     for i, a in enumerate(args):
@@ -40,7 +41,7 @@ def handle_command(cmd, user, *handle_args, **handle_kwargs):
         return globals()[f"__server_action_{action[1:]}"](args, *handle_args, **handle_kwargs)
 
 
-def handle_packet(packet, user):
+def handle_packet(user, packet):
     LOGGER.debug("Received packet")
     user.close()
 
