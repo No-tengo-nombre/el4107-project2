@@ -1,7 +1,9 @@
-from cam_common.configs import RECEIVING_WINDOW
+from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT
 from cam_common.logger import LOGGER
 from cam_server.database.database import UserNotFoundException
 from cam_server.core.resource_assigner import PortAssigner
+
+import webbrowser
 
 
 def handle_user(db, user_conn, user_socket, client_conn, client_socket, user_port):
@@ -26,7 +28,7 @@ def handle_user(db, user_conn, user_socket, client_conn, client_socket, user_por
 
 
 def handle_user_flow():
-    pass
+    webbrowser.get().open_new_tab(f"http://{DEFAULT_SERVER_IP}:{DEFAULT_SERVER_PORT}")
 
 
 def validate_user(db, conn):

@@ -113,13 +113,13 @@ class ServerCore:
                             # Redirect the connection to another port
                             port = PortAssigner.get_port()
                             try:
-                                # user_s.bind((self.ip, port))
-                                # user_s.listen()
-                                # conn.send(f"@redirect_port {port}".encode())
+                                user_s.bind((self.ip, port))
+                                user_s.listen()
+                                conn.send(f"@redirect_port {port}".encode())
 
-                                # # Accept the connection to the new port
-                                # conn, addr = user_s.accept()
-                                # LOGGER.info(f"Assigned {addr} to port {port}")
+                                # Accept the connection to the new port
+                                conn, addr = user_s.accept()
+                                LOGGER.info(f"Assigned {addr} to port {port}")
                                 conn.send(WELCOME_MSG.encode())
 
                                 user_thread = threading.Thread(target=handle_user, args=(self.db, conn, user_s, client_conn, client_s, port))
