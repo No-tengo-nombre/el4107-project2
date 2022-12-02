@@ -1,5 +1,6 @@
 from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_CLIENT_PORT, LOCAL_CAMERA_IP, LOCAL_CAMERA_PORT, RECEIVING_WINDOW
 from cam_common.logger import LOGGER
+from cam_client.core.proxy_handle import handle_information_flow
 
 import socket
 
@@ -82,15 +83,7 @@ class ClientCore:
 
                     LOGGER.info("Initializing proxy")
                     while not self.__should_close:
-                        # Act as a proxy
-                        LOGGER.debug("Listening for server packet")
-                        packet = server_s.recv(RECEIVING_WINDOW)
-                        LOGGER.debug("Sending packet to target")
-                        target_s.send(packet)
-                        LOGGER.debug("Listening for target packet")
-                        response = target_s.recv(RECEIVING_WINDOW)
-                        LOGGER.debug("Sending packet to server")
-                        server_s.send(response)
+                        handle_information_flow(server_s, target_s)
                     LOGGER.info("Finished connection")
 
         except:
