@@ -6,13 +6,13 @@ from getpass import getpass
 import webbrowser
 
 
-def handle_reconnection(user, sv_socket, client_socket, server_ip):
+def handle_reconnection(user, sv_socket, reconnection_socket, server_ip):
     packet = sv_socket.recv(RECEIVING_WINDOW)
     signal = handle_command(
         user,
         packet.decode(),
         server_socket=sv_socket,
-        client_socket=client_socket,
+        reconnection_socket=reconnection_socket,
         server_ip=server_ip,
     )
 
@@ -85,11 +85,12 @@ def __server_action_break_while_loop(*_, **__):
     return SIGNAL_BREAK
 
 
-def __server_action_redirect_port(args, server_socket, client_socket, server_ip, **__):
+def __server_action_redirect_port(args, server_socket, reconnection_socket, server_ip, **__):
     port = int(args[0])
     LOGGER.debug(f"Redirecting connection to {server_ip}:{port}")
+    server_socket.send("OK".encode())
     server_socket.close()
-    client_socket.connect((server_ip, port))
+    reconnection_socket.connect((server_ip, port))
 
 
 def __server_action_webbrowser_new_tab(args, server_socket, *_, **__):
