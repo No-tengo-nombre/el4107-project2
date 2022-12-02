@@ -15,7 +15,7 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
             user_conn.send("@break_while_loop".encode())
             user_conn.recv(RECEIVING_WINDOW)
 
-            handle_user_flow(server, user_conn)
+            handle_user_flow(server, user_conn, user_socket, client_conn, client_socket, user_port)
         else:
             LOGGER.info("Failed to validate user")
             user_conn.send("@kick Failed to validate the user :(".encode())
@@ -29,9 +29,15 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
         PortAssigner.release_port(user_port)
 
 
-def handle_user_flow(server, user_conn):
+def handle_user_flow(server, user_conn, user_socket, client_conn, client_socket, user_port):
     LOGGER.info(f"Sending connection request")
-    user_conn.send(f"@webbrowser_new_tab http:// $ip {server.port}".encode())
+    user_conn.send(f"@webbrowser_new_tab http:// $ip {user_port}".encode())
+
+    while True:
+        packet = user_conn.recv(RECEIVING_WINDOW)
+        client_conn.send(packet)
+        response = client_conn.recv(RECEIVING_WINDOW)
+        user_conn.send(response)
 
 
 def validate_user(db, conn):
