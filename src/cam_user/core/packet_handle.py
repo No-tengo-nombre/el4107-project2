@@ -21,6 +21,8 @@ def handle_auth(sv_socket):
         packet = sv_socket.recv(RECEIVING_WINDOW)
         LOGGER.debug("Received authentication packet")
         signal = handle_command(packet.decode(), server_socket=sv_socket)
+        if signal is not None:
+            LOGGER.debug(f"Got signal {signal}")
         if signal == SIGNAL_BREAK:
             LOGGER.debug("Breaking authentication loop")
             break
@@ -30,7 +32,7 @@ def handle_command(cmd, *handle_args, **handle_kwargs):
     LOGGER.debug("Handling server command")
     action, *args = cmd.split(" ")
     if action[0] == "@":
-        globals()[f"__server_action_{action[1:]}"](args, *handle_args, **handle_kwargs)
+        return globals()[f"__server_action_{action[1:]}"](args, *handle_args, **handle_kwargs)
 
 
 def handle_packet(packet, client):
