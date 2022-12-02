@@ -37,7 +37,7 @@ PARSER.add_argument(
     "-r",
     "--target-port",
     action="store",
-    type=str,
+    type=int,
     default=LOCAL_CAMERA_PORT,
     help="set target port",
 )
