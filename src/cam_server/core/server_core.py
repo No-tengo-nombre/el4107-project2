@@ -122,7 +122,7 @@ class ServerCore:
                                 LOGGER.info(f"Assigned {addr} to port {port}")
                                 conn.send(WELCOME_MSG.encode())
 
-                                user_thread = threading.Thread(target=handle_user, args=(self.db, conn, user_s, client_conn, client_s, port))
+                                user_thread = threading.Thread(target=handle_user, args=(self, self.db, conn, user_s, client_conn, client_s, port))
                                 user_thread.start()
                             except Exception as e:
                                 LOGGER.warning(f"Error assigning user to port {port}, found exception {e}")

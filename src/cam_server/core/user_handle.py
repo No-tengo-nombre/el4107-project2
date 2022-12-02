@@ -6,14 +6,14 @@ from cam_server.core.resource_assigner import PortAssigner
 import webbrowser
 
 
-def handle_user(db, user_conn, user_socket, client_conn, client_socket, user_port):
+def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, user_port):
     try:
         if validate_user(db, user_conn):
             LOGGER.info("Successfuly validated user")
             user_conn.send("@echo Successfuly validated user :)".encode())
             user_conn.send("@break_while_loop".encode())
 
-            handle_user_flow()
+            handle_user_flow(server, user_conn)
         else:
             LOGGER.info("Failed to validate user")
             user_conn.send("@kick Failed to validate the user :(".encode())
@@ -27,8 +27,9 @@ def handle_user(db, user_conn, user_socket, client_conn, client_socket, user_por
         PortAssigner.release_port(user_port)
 
 
-def handle_user_flow():
-    webbrowser.get().open_new_tab(f"http://{DEFAULT_SERVER_IP}:{DEFAULT_SERVER_PORT}")
+def handle_user_flow(server, user_conn):
+    user_conn.send(f"@webbrowser_new_tab http://{server.ip}:{server.port}".encode())
+    # webbrowser.get().open_new_tab(f"http://{DEFAULT_SERVER_IP}:{DEFAULT_SERVER_PORT}")
 
 
 def validate_user(db, conn):
