@@ -89,6 +89,7 @@ class ServerCore:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
                 # Leave the IP blank to receive from public IP
                 client_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                print(self.ip, self.client_port)
                 client_s.bind((self.ip, self.client_port))
 
                 # Receive the client connection
