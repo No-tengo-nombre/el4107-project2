@@ -32,6 +32,7 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
 def handle_user_flow(server, user_conn, user_socket, client_conn, client_socket, user_port):
     LOGGER.info(f"Sending connection request")
     user_conn.send(f"@webbrowser_new_tab http:// $ip {user_port}".encode())
+    user_conn.recv(RECEIVING_WINDOW)
 
     while True:
 

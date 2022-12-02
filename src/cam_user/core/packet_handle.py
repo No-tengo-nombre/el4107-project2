@@ -41,9 +41,9 @@ def handle_command(user, cmd, *handle_args, **handle_kwargs):
         return globals()[f"__server_action_{action[1:]}"](args, *handle_args, **handle_kwargs)
 
 
-def handle_packet(user, packet):
+def handle_packet(user, packet, server_socket):
     LOGGER.debug("Received packet")
-    handle_command(user, packet)
+    handle_command(user, packet, server_socket)
 
 
 # Available commands
@@ -92,7 +92,8 @@ def __server_action_redirect_port(args, server_socket, client_socket, server_ip,
     client_socket.connect((server_ip, port))
 
 
-def __server_action_webbrowser_new_tab(args, *_, **__):
+def __server_action_webbrowser_new_tab(args, server_socket, *_, **__):
     address = f"{''.join(args[:-1])}:{args[-1]}"
     LOGGER.info(f"Received connection request to {address}")
     webbrowser.get().open_new_tab(address)
+    server_socket.send("OK".encode())
