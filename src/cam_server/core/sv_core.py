@@ -113,7 +113,9 @@ class ServerCore:
                             # Redirect the connection to another port
                             port = PortAssigner.get_port()
                             try:
+                                print("ASDGASGDSGSDGDG")
                                 user_s.bind((self.ip, port))
+                                print("ASDGASGDSGSDGDG")
                                 user_s.listen()
                                 conn.send(f"@redirect_port {port}".encode())
 
