@@ -20,6 +20,7 @@ def handle_auth(sv_socket):
         LOGGER.debug("Received authentication packet")
         signal = handle_command(packet.decode(), server_socket=sv_socket)
         if signal == SIGNAL_BREAK:
+            LOGGER.debug("Breaking authentication loop")
             break
 
 
