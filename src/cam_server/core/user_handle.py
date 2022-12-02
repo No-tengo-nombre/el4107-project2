@@ -38,7 +38,7 @@ def validate_user(db, conn):
 
     conn.send("@hidden_input Enter password".encode())
     password = conn.recv(1024).decode()
-    LOGGER.info(f"Received password {password}")
+    LOGGER.info("Received password")
 
     try:
         validation_status = db.validate_user(username, password)
