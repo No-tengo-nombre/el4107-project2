@@ -13,7 +13,7 @@ PARSER.add_argument(
     "--ip",
     action="store",
     type=str,
-    default=DEFAULT_SERVER_IP,
+    default="",
     help="set the ip of the server",
 )
 PARSER.add_argument(
