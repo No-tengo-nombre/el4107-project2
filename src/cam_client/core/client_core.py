@@ -86,8 +86,8 @@ class ClientCore:
                         handle_information_flow(server_s, target_s)
                     LOGGER.info("Finished connection")
 
-        except:
-            LOGGER.warning("Closing client")
+        except Exception as e:
+            LOGGER.warning(f"Closing client, found exception {e}")
             self.close()
         finally:
             self.clean_up()
