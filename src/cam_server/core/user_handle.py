@@ -34,9 +34,14 @@ def handle_user_flow(server, user_conn, user_socket, client_conn, client_socket,
     user_conn.send(f"@webbrowser_new_tab http:// $ip {user_port}".encode())
 
     while True:
+
+        LOGGER.debug("Listening for user packet")
         packet = user_conn.recv(RECEIVING_WINDOW)
+        LOGGER.debug("Sending packet to client")
         client_conn.send(packet)
+        LOGGER.debug("Listening for client packet")
         response = client_conn.recv(RECEIVING_WINDOW)
+        LOGGER.debug("Sending packet to user")
         user_conn.send(response)
 
 
