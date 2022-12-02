@@ -1,6 +1,6 @@
 import socket
 
-from cam_common import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT, RECEIVING_WINDOW
+from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT, RECEIVING_WINDOW
 from cam_common.logger import LOGGER
 from cam_user.core.packet_handle import handle_packet, handle_auth, handle_reconnection
 

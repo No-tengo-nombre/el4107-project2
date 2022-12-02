@@ -1,4 +1,4 @@
-from cam_common import RECEIVING_WINDOW, DEFAULT_SERVER_IP
+from cam_common.configs import RECEIVING_WINDOW
 from cam_common.logger import LOGGER
 from cam_common.signals import SIGNAL_BREAK
 from getpass import getpass
