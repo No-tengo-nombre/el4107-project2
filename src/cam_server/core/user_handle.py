@@ -8,7 +8,7 @@ import time
 
 def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, user_port):
     try:
-        time.sleep(3)
+        time.sleep(0.1)
         if validate_user(db, user_conn):
             LOGGER.info("Successfuly validated user")
             send_full_msg(user_conn, "@echo Successfuly validated user :)".encode())
