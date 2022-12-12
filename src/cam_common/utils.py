@@ -44,9 +44,11 @@ def receive_full_msg(sock, size_window=SIZE_RECEIVING_WINDOW, window=RECEIVING_W
     final_msg = b""
     while True:
         msg = sock.recv(window)
-        final_msg += msg
         if msg.endswith(rb"\r\n\r\n"):
+            final_msg += msg[:-8]
             break
+        else:
+            final_msg += msg
     LOGGER.debug(f"Received message {final_msg}")
     return final_msg
 
