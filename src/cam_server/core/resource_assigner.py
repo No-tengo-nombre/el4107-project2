@@ -41,11 +41,11 @@ class PortAssigner:
         PortAssigner.__port_mapping[port] = (sock, addr)
 
     @staticmethod
-    def get_sock(port):
+    def get_sock_from_port(port):
         return PortAssigner.__port_mapping[port]
 
     @staticmethod
-    def get_port(addr):
+    def get_port_from_addr(addr):
         return PortAssigner.__socket_mapping[addr]
 
     def __enter__(self):
