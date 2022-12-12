@@ -82,18 +82,18 @@ class ClientCore:
     @timeout.setter
     def timeout(self, new_timeout):
         self._timeout = new_timeout
-        self.__server_socket.settimeout(new_timeout)
-        self.__target_socket.settimeout(new_timeout)
+        # self.__server_socket.settimeout(new_timeout)
+        # self.__target_socket.settimeout(new_timeout)
 
     def start(self):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_s:
                 self.__server_socket = server_s
-                server_s.settimeout(self.timeout)
+                # server_s.settimeout(self.timeout)
 
                 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as target_s:
                     self.__target_socket = target_s
-                    server_s.settimeout(self.timeout)
+                    # server_s.settimeout(self.timeout)
 
                     # Connect to the server and target
                     LOGGER.info("Connecting to server")

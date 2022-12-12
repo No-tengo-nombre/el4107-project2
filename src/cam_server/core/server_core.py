@@ -96,15 +96,15 @@ class ServerCore:
     @timeout.setter
     def timeout(self, new_timeout):
         self._timeout = new_timeout
-        self.__client_socket.settimeout(new_timeout)
-        self.__user_recv_socket.settimeout(new_timeout)
-        self.__user_socket.settimeout(new_timeout)
+        # self.__client_socket.settimeout(new_timeout)
+        # self.__user_recv_socket.settimeout(new_timeout)
+        # self.__user_socket.settimeout(new_timeout)
 
     def start(self):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_s:
                 self.__client_socket = client_s
-                client_s.settimeout(self.timeout)
+                # client_s.settimeout(self.timeout)
 
                 # Leave the IP blank to receive from public IP
                 client_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -119,11 +119,11 @@ class ServerCore:
                 while not self.__should_close:
                     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_recv_s:
                         self.__user_recv_socket = user_recv_s
-                        user_recv_s.settimeout(self.timeout)
+                        # user_recv_s.settimeout(self.timeout)
 
                         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_s:
                             self.__user_socket = user_s
-                            user_s.settimeout(self.timeout)
+                            # user_s.settimeout(self.timeout)
 
                             # Leave the IP blank to receive from public IP
                             user_recv_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

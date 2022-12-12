@@ -50,8 +50,8 @@ class UserCore:
     @timeout.setter
     def timeout(self, new_timeout):
         self._timeout = new_timeout
-        self.__server_socket.settimeout(new_timeout)
-        self.__target_socket.settimeout(new_timeout)
+        # self.__server_socket.settimeout(new_timeout)
+        # self.__target_socket.settimeout(new_timeout)
 
     def close(self):
         self.__should_close = True
@@ -59,11 +59,11 @@ class UserCore:
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as initial_s:
             self.__initial_socket = initial_s
-            initial_s.settimeout(self.timeout)
+            # initial_s.settimeout(self.timeout)
 
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as reconn_s:
                 self.__reconn_socket = reconn_s
-                reconn_s.settimeout(self.timeout)
+                # reconn_s.settimeout(self.timeout)
 
                 # Accept the connection and redirect the port
                 LOGGER.info("Connecting to the initial socket")
