@@ -152,6 +152,7 @@ class ServerCore:
                                 LOGGER.warning(
                                     f"Error assigning user to port {port}, found exception {e}"
                                 )
+                                PortAssigner.release_port(port)
 
         except Exception as e:
             LOGGER.warning(f"Closing server, found exception {e}")
