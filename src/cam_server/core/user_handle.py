@@ -1,4 +1,4 @@
-from cam_common.configs import USER_LOCAL_PORT
+from cam_common.configs import USER_LOCAL_PORT, DEFAULT_SERVER_IP
 from cam_common.logger import LOGGER
 from cam_common.requests import get_request_field, replace_request_field
 from cam_common.utils import receive_full_msg, send_full_msg
@@ -47,19 +47,25 @@ def handle_user_flow(
     receive_full_msg(user_conn)
 
     LOGGER.info("Received confirmation, moving to packet redirection")
+    if server.ip == "":
+        host_ip = DEFAULT_SERVER_IP
+    else:
+        host_ip = server.ip
+
     time.sleep(1)
     while True:
         LOGGER.debug("Listening for user packet")
         packet = receive_full_msg(user_conn)
         try:
             user_addr = get_request_field(packet, "Host")
-            packet = replace_request_field(packet, "Host", f"{server.ip}:{user_port}")
+            packet = replace_request_field(packet, "Host", f"{host_ip}:{user_port}")
             LOGGER.debug(f"Replaced field Host in user packet, got {packet}")
         except:
             LOGGER.info("Request does not contain field Host")
         try:
+
             user_referer = get_request_field(packet, "Referer")
-            packet = replace_request_field(packet, "Referer", f"http://{server.ip}:{user_port}/")
+            packet = replace_request_field(packet, "Referer", f"http://{host_ip}:{user_port}/")
             LOGGER.debug(f"Replaced field Referer in user packet, got {packet}")
         except:
             LOGGER.info("Request does not contain field Referer")
