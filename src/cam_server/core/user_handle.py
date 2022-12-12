@@ -6,7 +6,9 @@ from cam_server.core.resource_assigner import PortAssigner
 import time
 
 
-def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, user_port):
+def handle_user(
+    server, db, user_conn, user_socket, client_conn, client_socket, user_port
+):
     try:
         time.sleep(1)
         if validate_user(db, user_conn):
@@ -16,7 +18,9 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
             send_full_msg(user_conn, "@break_while_loop".encode())
             receive_full_msg(user_conn)
 
-            handle_user_flow(server, user_conn, user_socket, client_conn, client_socket, user_port)
+            handle_user_flow(
+                server, user_conn, user_socket, client_conn, client_socket, user_port
+            )
         else:
             LOGGER.info("Failed to validate user")
             send_full_msg(user_conn, "@kick Failed to validate the user :(".encode())
@@ -25,12 +29,16 @@ def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, 
             PortAssigner.release_port(user_port)
             LOGGER.info("Finishing user thread.")
     except Exception as e:
-        LOGGER.warning(f"Connection with user {user_conn} suddenly closed, found exception {e}")
+        LOGGER.warning(
+            f"Connection with user {user_conn} suddenly closed, found exception {e}"
+        )
     finally:
         PortAssigner.release_port(user_port)
 
 
-def handle_user_flow(server, user_conn, user_socket, client_conn, client_socket, user_port):
+def handle_user_flow(
+    server, user_conn, user_socket, client_conn, client_socket, user_port
+):
     LOGGER.info(f"Sending connection request")
     send_full_msg(user_conn, f"@webbrowser_new_tab http:// $ip {user_port}".encode())
     LOGGER.info("Receiving connection request confirmation")
@@ -64,7 +72,10 @@ def validate_user(db, conn):
         LOGGER.info(f"Validation status {validation_status}")
         return validation_status
     except UserNotFoundException:
-        send_full_msg(conn, f"@input User {username} was not found, would you like to create it? (y/n): ".encode())
+        send_full_msg(
+            conn,
+            f"@input User {username} was not found, would you like to create it? (y/n): ".encode(),
+        )
         answer = receive_full_msg(conn).decode().upper()
         if answer == "Y":
             db.register_user(username, password)

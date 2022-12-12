@@ -11,7 +11,9 @@ class PortAssigner:
         try:
             port = PortAssigner.__free_ports.pop()
             PortAssigner.__used_ports.append(port)
-            LOGGER.info(f"Got port {port}, free ports {PortAssigner.__free_ports}, used ports {PortAssigner.__used_ports}")
+            LOGGER.info(
+                f"Got port {port}, free ports {PortAssigner.__free_ports}, used ports {PortAssigner.__used_ports}"
+            )
             return port
         except IndexError:
             return -1
@@ -21,7 +23,9 @@ class PortAssigner:
         try:
             idx = PortAssigner.__used_ports.index(port)
             PortAssigner.__free_ports.append(PortAssigner.__used_ports.pop(idx))
-            LOGGER.info(f"Released port {port}, free ports {PortAssigner.__free_ports}, used ports {PortAssigner.__used_ports}")
+            LOGGER.info(
+                f"Released port {port}, free ports {PortAssigner.__free_ports}, used ports {PortAssigner.__used_ports}"
+            )
             return True
         except ValueError:
             return False

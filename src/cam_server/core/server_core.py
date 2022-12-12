@@ -43,7 +43,9 @@ WELCOME_MSG = r"""
 class ServerCore:
     db = USER_DATABASE
 
-    def __init__(self, ip="", port=DEFAULT_SERVER_PORT, client_port=DEFAULT_CLIENT_PORT):
+    def __init__(
+        self, ip="", port=DEFAULT_SERVER_PORT, client_port=DEFAULT_CLIENT_PORT
+    ):
         self.__should_close = False
         self._ip = ip
         self._port = port
@@ -99,15 +101,23 @@ class ServerCore:
                 LOGGER.info(f"Connection with client {client_addr} accepted")
 
                 while not self.__should_close:
-                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_recv_s:
-                        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as user_s:
+                    with socket.socket(
+                        socket.AF_INET, socket.SOCK_STREAM
+                    ) as user_recv_s:
+                        with socket.socket(
+                            socket.AF_INET, socket.SOCK_STREAM
+                        ) as user_s:
                             # Leave the IP blank to receive from public IP
-                            user_recv_s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                            user_recv_s.setsockopt(
+                                socket.SOL_SOCKET, socket.SO_REUSEADDR, 1
+                            )
                             user_recv_s.bind((self.ip, self.port))
 
                             # Receive the initial user connection
                             user_recv_s.listen()
-                            LOGGER.info(f"Waiting for a user connection, socket {user_recv_s}")
+                            LOGGER.info(
+                                f"Waiting for a user connection, socket {user_recv_s}"
+                            )
                             conn, addr = user_recv_s.accept()
                             LOGGER.info(f"Connection with {conn} accepted")
 
@@ -125,10 +135,23 @@ class ServerCore:
                                 LOGGER.info(f"Assigned {addr} to port {port}")
                                 send_full_msg(conn, WELCOME_MSG.encode())
 
-                                user_thread = threading.Thread(target=handle_user, args=(self, self.db, conn, user_s, client_conn, client_s, port))
+                                user_thread = threading.Thread(
+                                    target=handle_user,
+                                    args=(
+                                        self,
+                                        self.db,
+                                        conn,
+                                        user_s,
+                                        client_conn,
+                                        client_s,
+                                        port,
+                                    ),
+                                )
                                 user_thread.start()
                             except Exception as e:
-                                LOGGER.warning(f"Error assigning user to port {port}, found exception {e}")
+                                LOGGER.warning(
+                                    f"Error assigning user to port {port}, found exception {e}"
+                                )
 
         except Exception as e:
             LOGGER.warning(f"Closing server, found exception {e}")

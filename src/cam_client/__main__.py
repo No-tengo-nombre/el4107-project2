@@ -1,5 +1,10 @@
 from cam_client.core.client_core import ClientCore
-from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_CLIENT_PORT, LOCAL_CAMERA_IP, LOCAL_CAMERA_PORT
+from cam_common.configs import (
+    DEFAULT_SERVER_IP,
+    DEFAULT_CLIENT_PORT,
+    LOCAL_CAMERA_IP,
+    LOCAL_CAMERA_PORT,
+)
 from cam_common.logger import setup_logger
 
 import argparse

@@ -1,4 +1,9 @@
-from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_CLIENT_PORT, LOCAL_CAMERA_IP, LOCAL_CAMERA_PORT
+from cam_common.configs import (
+    DEFAULT_SERVER_IP,
+    DEFAULT_CLIENT_PORT,
+    LOCAL_CAMERA_IP,
+    LOCAL_CAMERA_PORT,
+)
 from cam_common.logger import LOGGER
 from cam_client.core.proxy_handle import handle_information_flow
 
@@ -6,8 +11,12 @@ import socket
 
 
 class ClientCore:
-    def __init__(self, server_ip=DEFAULT_SERVER_IP, server_port=DEFAULT_CLIENT_PORT,
-        target_ip=LOCAL_CAMERA_IP, target_port=LOCAL_CAMERA_PORT,
+    def __init__(
+        self,
+        server_ip=DEFAULT_SERVER_IP,
+        server_port=DEFAULT_CLIENT_PORT,
+        target_ip=LOCAL_CAMERA_IP,
+        target_port=LOCAL_CAMERA_PORT,
     ) -> None:
         self.__should_close = False
         self._server_ip = server_ip

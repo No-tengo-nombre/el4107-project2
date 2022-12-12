@@ -18,12 +18,14 @@ def _encrypt(password, salt):
 
 class UserNotFoundException(Exception):
     """Exception when a user is not found."""
+
     def __init__(self, username) -> None:
         super().__init__(f"User {username} was not found.")
 
 
 class UserAlreadyExistsException(Exception):
     """Exception when a user already exists."""
+
     def __init__(self, username) -> None:
         super().__init__(f"User {username} already exists.")
 

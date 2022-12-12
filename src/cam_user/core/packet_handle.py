@@ -37,9 +37,11 @@ def handle_command(user, cmd, *handle_args, **handle_kwargs):
     for i, a in enumerate(args):
         if a[0] == "$":
             args[i] = getattr(user, a[1:])
-    
+
     if action[0] == "@":
-        return globals()[f"__server_action_{action[1:]}"](args, *handle_args, **handle_kwargs)
+        return globals()[f"__server_action_{action[1:]}"](
+            args, *handle_args, **handle_kwargs
+        )
 
 
 def handle_packet(user, packet, server_socket):
@@ -86,7 +88,9 @@ def __server_action_break_while_loop(*_, **__):
     return SIGNAL_BREAK
 
 
-def __server_action_redirect_port(args, server_socket, reconnection_socket, server_ip, **__):
+def __server_action_redirect_port(
+    args, server_socket, reconnection_socket, server_ip, **__
+):
     port = int(args[0])
     LOGGER.debug(f"Redirecting connection to {server_ip}:{port}")
     send_full_msg(server_socket, "OK".encode())
