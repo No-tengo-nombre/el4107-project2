@@ -19,15 +19,6 @@ class EMPTY_SOCKET:
 
 
 def yield_full_msg(sock, msg_size, window=RECEIVING_WINDOW):
-    # while True:
-    #     try:
-    #         msg = sock.recv(window)
-    #         if msg == b"":
-    #             break
-    #         yield msg
-    #     except socket.timeout:
-    #         LOGGER.warning("Receiving timeout")
-
     recv_size = 0
     while recv_size < msg_size:
         try:
@@ -39,13 +30,6 @@ def yield_full_msg(sock, msg_size, window=RECEIVING_WINDOW):
 
 
 def receive_full_msg(sock, size_window=SIZE_RECEIVING_WINDOW, window=RECEIVING_WINDOW):
-    # final_msg = b""
-    # for part in yield_full_msg(sock, window):
-    #     print(part)
-    #     final_msg += part
-    # print("SDFSFSDF")
-    # return final_msg
-
     msg_size = int(sock.recv(size_window).decode())
     LOGGER.debug(f"Received message size {msg_size}")
     final_msg = b""
@@ -55,7 +39,7 @@ def receive_full_msg(sock, size_window=SIZE_RECEIVING_WINDOW, window=RECEIVING_W
     return final_msg
 
 
-def send_full_msg(sock, message, size_window=SIZE_RECEIVING_WINDOW, window=RECEIVING_WINDOW):
+def send_full_msg(sock, message, size_window=SIZE_RECEIVING_WINDOW):
     """Send the message size and message, assumming the input is already encoded."""
     msg_size = len(message)
     sock.send(str(msg_size).zfill(size_window).encode())
