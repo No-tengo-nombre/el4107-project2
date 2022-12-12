@@ -24,6 +24,8 @@ def yield_full_msg(sock, msg_size, window=RECEIVING_WINDOW):
         try:
             msg = sock.recv(window)
             recv_size += window
+            print("SADFSAFSFSDFDSF")
+            print(msg)
             yield msg
         except socket.timeout:
             LOGGER.warning("Receiving timeout")
