@@ -1,8 +1,10 @@
+from cam_common.configs import USER_LOCAL_PORT, DEFAULT_TIMEOUT, RECEIVING_WINDOW
 from cam_common.logger import LOGGER
-from cam_common.signals import SIGNAL_BREAK
+from cam_common.signals import SIGNAL_BREAK, SIGNAL_START_TRAFFIC
 from cam_common.utils import receive_full_msg, send_full_msg
 from getpass import getpass
 
+import socket
 import webbrowser
 
 
@@ -46,7 +48,28 @@ def handle_command(user, cmd, *handle_args, **handle_kwargs):
 
 def handle_packet(user, packet, server_socket):
     LOGGER.debug("Received packet")
-    handle_command(user, packet, server_socket)
+    result = handle_command(user, packet, server_socket)
+    if result is not None:
+        signal, val = result
+
+        # Go into main traffic mode
+        if signal == SIGNAL_START_TRAFFIC:
+            browser_conn, _ = val
+            browser_conn.settimeout(DEFAULT_TIMEOUT)
+            while True:
+                packet = b""
+                while True:
+                    try:
+                        packet += browser_conn.recv(RECEIVING_WINDOW)
+                    except socket.timeout:
+                        break
+                LOGGER.debug("Received packet from browser")
+                send_full_msg(server_socket, packet)
+                LOGGER.debug("Sent packet to server")
+                response = receive_full_msg(server_socket)
+                LOGGER.debug("Received packet from server")
+                send_full_msg(browser_conn, response)
+                LOGGER.debug("Sent packet to browser")
 
 
 # Available commands
@@ -99,7 +122,14 @@ def __server_action_redirect_port(
 
 
 def __server_action_webbrowser_new_tab(args, server_socket, *_, **__):
-    address = f"{''.join(args[:-1])}:{args[-1]}"
+    # address = f"{''.join(args[:-1])}:{args[-1]}"
+    address = f"http://127.0.0.1:{USER_LOCAL_PORT}"
     LOGGER.info(f"Received connection request to {address}")
     send_full_msg(server_socket, "OK".encode())
+
+    local_s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    local_s.bind(("127.0.0.1", USER_LOCAL_PORT))
+    local_s.listen()
+
     webbrowser.get().open_new_tab(address)
+    return SIGNAL_START_TRAFFIC, local_s.accept()
