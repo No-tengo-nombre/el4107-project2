@@ -1,5 +1,6 @@
-from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_CLIENT_PORT, LOCAL_CAMERA_IP, LOCAL_CAMERA_PORT, RECEIVING_WINDOW
+from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_CLIENT_PORT, LOCAL_CAMERA_IP, LOCAL_CAMERA_PORT, DEFAULT_TIMEOUT
 from cam_common.logger import LOGGER
+from cam_common.utils import EMPTY_SOCKET
 from cam_client.core.proxy_handle import handle_information_flow
 
 import socket
@@ -7,7 +8,7 @@ import socket
 
 class ClientCore:
     def __init__(self, server_ip=DEFAULT_SERVER_IP, server_port=DEFAULT_CLIENT_PORT,
-        target_ip=LOCAL_CAMERA_IP, target_port=LOCAL_CAMERA_PORT
+        target_ip=LOCAL_CAMERA_IP, target_port=LOCAL_CAMERA_PORT, timeout=DEFAULT_TIMEOUT,
     ) -> None:
         self.__should_close = False
         self._server_ip = server_ip
@@ -16,6 +17,9 @@ class ClientCore:
         self._target_ip = target_ip
         self._target_port = target_port
         self._target_desc = (target_ip, target_port)
+        self._timeout = timeout
+        self.__server_socket = EMPTY_SOCKET
+        self.__target_socket = EMPTY_SOCKET
 
     @property
     def server_ip(self):
@@ -40,6 +44,10 @@ class ClientCore:
     @property
     def target_desc(self):
         return self._target_desc
+
+    @property
+    def timeout(self):
+        return self._timeout
 
     @server_ip.setter
     def server_ip(self, new_ip):
@@ -71,10 +79,22 @@ class ClientCore:
         self._target_desc = new_target_desc
         self._target_ip, self._target_port = new_target_desc
 
+    @timeout.setter
+    def timeout(self, new_timeout):
+        self._timeout = new_timeout
+        self.__server_socket.settimeout(new_timeout)
+        self.__target_socket.settimeout(new_timeout)
+
     def start(self):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_s:
+                self.__server_socket = server_s
+                server_s.settimeout(self.timeout)
+
                 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as target_s:
+                    self.__target_socket = target_s
+                    server_s.settimeout(self.timeout)
+
                     # Connect to the server and target
                     LOGGER.info("Connecting to server")
                     server_s.connect(self.server_desc)
