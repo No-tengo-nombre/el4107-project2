@@ -1,6 +1,6 @@
 import socket
 
-from cam_common.configs import RECEIVING_WINDOW
+from cam_common.configs import RECEIVING_WINDOW, SIZE_RECEIVING_WINDOW
 from cam_common.logger import LOGGER
 
 
@@ -38,7 +38,7 @@ def yield_full_msg(sock, msg_size, window=RECEIVING_WINDOW):
             LOGGER.warning("Receiving timeout")
 
 
-def receive_full_msg(sock, window=RECEIVING_WINDOW):
+def receive_full_msg(sock, size_window=SIZE_RECEIVING_WINDOW, window=RECEIVING_WINDOW):
     # final_msg = b""
     # for part in yield_full_msg(sock, window):
     #     print(part)
@@ -46,15 +46,17 @@ def receive_full_msg(sock, window=RECEIVING_WINDOW):
     # print("SDFSFSDF")
     # return final_msg
 
-    msg_size = int(sock.recv(window).decode())
+    msg_size = int(sock.recv(size_window).decode())
+    LOGGER.debug(f"Received message size {msg_size}")
     final_msg = b""
     for part in yield_full_msg(sock, msg_size, window):
         final_msg += part
+    LOGGER.debug(f"Received message {final_msg}")
     return final_msg
 
 
-def send_full_msg(sock, message, window=RECEIVING_WINDOW):
+def send_full_msg(sock, message, size_window=SIZE_RECEIVING_WINDOW, window=RECEIVING_WINDOW):
     """Send the message size and message, assumming the input is already encoded."""
     msg_size = len(message)
-    sock.send(str(msg_size).encode())
+    sock.send(str(msg_size).zfill(size_window).encode())
     sock.send(message)
