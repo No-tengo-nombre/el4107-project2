@@ -74,7 +74,7 @@ def validate_user(db, conn):
     except UserNotFoundException:
         send_full_msg(
             conn,
-            f"@input User {username} was not found, would you like to create it? (y/n): ".encode(),
+            f"@input User {username} was not found, would you like to create it? (y/n)".encode(),
         )
         answer = receive_full_msg(conn).decode().upper()
         if answer == "Y":

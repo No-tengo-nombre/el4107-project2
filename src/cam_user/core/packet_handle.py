@@ -32,7 +32,7 @@ def handle_auth(user, sv_socket):
 
 
 def handle_command(user, cmd, *handle_args, **handle_kwargs):
-    LOGGER.debug("Handling server command")
+    LOGGER.debug(f"Handling server command {cmd}")
     action, *args = cmd.split(" ")
     for i, a in enumerate(args):
         if a[0] == "$":
