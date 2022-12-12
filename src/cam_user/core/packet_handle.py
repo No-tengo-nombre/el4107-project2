@@ -1,13 +1,15 @@
 from cam_common.configs import RECEIVING_WINDOW
 from cam_common.logger import LOGGER
 from cam_common.signals import SIGNAL_BREAK
+from cam_common.utils import receive_full_msg
 from getpass import getpass
 
 import webbrowser
 
 
 def handle_reconnection(user, sv_socket, reconnection_socket, server_ip):
-    packet = sv_socket.recv(RECEIVING_WINDOW)
+    # packet = sv_socket.recv(RECEIVING_WINDOW)
+    packet = receive_full_msg(sv_socket)
     signal = handle_command(
         user,
         packet.decode(),
@@ -19,7 +21,8 @@ def handle_reconnection(user, sv_socket, reconnection_socket, server_ip):
 
 def handle_auth(user, sv_socket):
     while True:
-        packet = sv_socket.recv(RECEIVING_WINDOW)
+        # packet = sv_socket.recv(RECEIVING_WINDOW)
+        packet = receive_full_msg(sv_socket)
         LOGGER.debug("Received authentication packet")
         signal = handle_command(user, packet.decode(), server_socket=sv_socket)
         if signal is not None:

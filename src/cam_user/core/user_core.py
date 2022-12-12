@@ -2,6 +2,7 @@ import socket
 
 from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT, RECEIVING_WINDOW
 from cam_common.logger import LOGGER
+from cam_common.utils import receive_full_msg
 from cam_user.core.packet_handle import handle_packet, handle_auth, handle_reconnection
 
 
@@ -52,7 +53,8 @@ class UserCore:
                 handle_reconnection(self, initial_s, reconn_s, self.ip)
 
                 # Receive the welcome message
-                welcome_msg = reconn_s.recv(RECEIVING_WINDOW)
+                # welcome_msg = reconn_s.recv(RECEIVING_WINDOW)
+                welcome_msg = receive_full_msg(reconn_s)
                 print(welcome_msg.decode())
 
                 # Authenticate and receive stuff
@@ -61,5 +63,6 @@ class UserCore:
 
                 LOGGER.info("Finished authentication, going to main information flow")
                 while not self.__should_close:
-                    packet = reconn_s.recv(RECEIVING_WINDOW)
+                    # packet = reconn_s.recv(RECEIVING_WINDOW)
+                    packet = receive_full_msg(reconn_s)
                     handle_packet(self, packet.decode(), reconn_s)
