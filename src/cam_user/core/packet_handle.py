@@ -10,6 +10,7 @@ import webbrowser
 def handle_reconnection(user, sv_socket, reconnection_socket, server_ip):
     # packet = sv_socket.recv(RECEIVING_WINDOW)
     packet = receive_full_msg(sv_socket)
+    LOGGER.debug("Received reconnection packet")
     signal = handle_command(
         user,
         packet.decode(),
