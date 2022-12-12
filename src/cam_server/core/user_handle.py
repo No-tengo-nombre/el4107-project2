@@ -1,5 +1,6 @@
 from cam_common.configs import USER_LOCAL_PORT
 from cam_common.logger import LOGGER
+from cam_common.requests import get_request_field, replace_request_field
 from cam_common.utils import receive_full_msg, send_full_msg
 from cam_server.database.database import UserNotFoundException
 from cam_server.core.resource_assigner import PortAssigner
@@ -50,11 +51,17 @@ def handle_user_flow(
     while True:
         LOGGER.debug("Listening for user packet")
         packet = receive_full_msg(user_conn)
+        user_addr = get_request_field(packet, "Host")
+        user_referer = get_request_field(packet, "Referer")
+        packet = replace_request_field(packet, "Host", f"{server.ip}:{user_port}")
+        packet = replace_request_field(packet, "Referer", f"http://{server.ip}:{user_port}/")
         LOGGER.debug("Sending packet to client")
         send_full_msg(client_conn, packet)
         LOGGER.debug("Listening for client packet")
         response = receive_full_msg(client_conn)
         LOGGER.debug("Sending packet to user")
+        response = replace_request_field(response, "Host", user_addr)
+        response = replace_request_field(response, "Referer", user_referer)
         send_full_msg(user_conn, response)
 
 
