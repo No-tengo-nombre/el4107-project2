@@ -23,7 +23,10 @@ def yield_full_msg(sock, msg_size, window=RECEIVING_WINDOW):
     while recv_size < msg_size:
         try:
             msg = sock.recv(window)
-            recv_size += window
+            if msg.endswith(br"\r\n"):
+                recv_size = msg_size
+            else:
+                recv_size += window
             yield msg
         except socket.timeout:
             LOGGER.warning("Receiving timeout")
