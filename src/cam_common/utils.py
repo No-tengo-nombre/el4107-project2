@@ -47,6 +47,7 @@ def receive_full_msg(sock, window=RECEIVING_WINDOW):
     # return final_msg
 
     msg_size = int(sock.recv(window).decode())
+    final_msg = b""
     for part in yield_full_msg(sock, msg_size, window):
         final_msg += part
     return final_msg
