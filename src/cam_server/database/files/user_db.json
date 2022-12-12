@@ -4,6 +4,11 @@
       "salt": "c8a9d49a-0d9d-4a4f-b3c3-cb0cb09d969c",
       "password": "R5DFptMxzPaE9cSBs2rNJIvW1b28Kvaq6kYxfqGEuvw3K3yUax0nh-sF97LExEyu2IflaPYRFt3iJhVQ5fYzNg==",
       "join_date": "2022-11-30T19:16:16.718004"
+    },
+    "user": {
+      "salt": "fd6b3112-7199-42b5-bbd1-05d231b78690",
+      "password": "EKCrs_U52tpcTIb6i2ymJqgvImANCM69u9mBhjGp0vwnRdX_HAgJmOldIlzhSIbo5LKps5DQVzGbvT9JlFzmBw==",
+      "join_date": "2022-12-12T05:15:39.876015"
     }
   }
 }
