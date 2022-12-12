@@ -24,4 +24,4 @@ def get_request_field(request, field):
 
 def replace_request_field(request, field, new_val):
     idx, high_idx = get_request_field_index(request, field)
-    return request[:idx] + f"\r\n{field}: {new_val}".encode() + request[high_idx:]
+    return request[:idx] + f"{field}: {new_val}".encode() + request[high_idx:]
