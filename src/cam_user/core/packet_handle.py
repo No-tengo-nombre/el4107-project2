@@ -68,7 +68,7 @@ def handle_packet(user, packet, server_socket):
                 LOGGER.debug("Sent packet to server")
                 response = receive_full_msg(server_socket)
                 LOGGER.debug("Received packet from server")
-                send_full_msg(browser_conn, response)
+                browser_conn.send(response)
                 LOGGER.debug("Sent packet to browser")
 
 
