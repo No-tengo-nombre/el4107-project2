@@ -156,7 +156,7 @@ class ServerCore:
                                 PortAssigner.release_port(port)
 
         except Exception as e:
-            LOGGER.warning(f"Closing server, found exception {e}")
+            LOGGER.critical(f"Closing server, found exception {e}")
             self.close()
 
         finally:

@@ -96,8 +96,9 @@ class ClientCore:
                     LOGGER.info("Finished connection")
 
         except Exception as e:
-            LOGGER.warning(f"Closing client, found exception {e}")
+            LOGGER.critical(f"Closing client, found exception {e}")
             self.close()
+
         finally:
             self.clean_up()
 

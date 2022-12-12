@@ -40,28 +40,39 @@ class UserCore:
         self._desc = new_desc
         self._ip, self._port = new_desc
 
+    def start(self):
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as initial_s:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as reconn_s:
+                    # Accept the connection and redirect the port
+                    LOGGER.info("Connecting to the initial socket")
+                    initial_s.connect(self.desc)
+                    LOGGER.info("Redirecting connection")
+                    handle_reconnection(self, initial_s, reconn_s, self.ip)
+                    LOGGER.info("Redirected connection")
+
+                    # Receive the welcome message
+                    welcome_msg = receive_full_msg(reconn_s)
+                    print(welcome_msg.decode())
+
+                    # Authenticate and receive stuff
+                    LOGGER.info("Authenticating")
+                    handle_auth(self, reconn_s)
+
+                    LOGGER.info("Finished authentication, going to main information flow")
+                    while not self.__should_close:
+                        packet = receive_full_msg(reconn_s)
+                        handle_packet(self, packet.decode(), reconn_s)
+
+        except Exception as e:
+            LOGGER.critical(f"Closing user, found exception {e}")
+            self.close()
+
+        finally:
+            self.clean_up()
+
     def close(self):
         self.__should_close = True
 
-    def start(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as initial_s:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as reconn_s:
-                # Accept the connection and redirect the port
-                LOGGER.info("Connecting to the initial socket")
-                initial_s.connect(self.desc)
-                LOGGER.info("Redirecting connection")
-                handle_reconnection(self, initial_s, reconn_s, self.ip)
-                LOGGER.info("Redirected connection")
-
-                # Receive the welcome message
-                welcome_msg = receive_full_msg(reconn_s)
-                print(welcome_msg.decode())
-
-                # Authenticate and receive stuff
-                LOGGER.info("Authenticating")
-                handle_auth(self, reconn_s)
-
-                LOGGER.info("Finished authentication, going to main information flow")
-                while not self.__should_close:
-                    packet = receive_full_msg(reconn_s)
-                    handle_packet(self, packet.decode(), reconn_s)
+    def clean_up(self):
+        pass
