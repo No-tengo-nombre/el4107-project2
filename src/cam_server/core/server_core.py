@@ -119,7 +119,7 @@ class ServerCore:
                                 f"Waiting for a user connection, socket {user_recv_s}"
                             )
                             conn, addr = user_recv_s.accept()
-                            LOGGER.info(f"Connection with {conn} accepted")
+                            LOGGER.info(f"Connection with {addr} accepted")
 
                             # Redirect the connection to another port
                             port = PortAssigner.get_port()
@@ -132,6 +132,7 @@ class ServerCore:
 
                                 # Accept the connection to the new port
                                 conn, addr = user_s.accept()
+                                PortAssigner.assign_socket_to_port(port, conn, addr)
                                 LOGGER.info(f"Assigned {addr} to port {port}")
                                 send_full_msg(conn, WELCOME_MSG.encode())
 
