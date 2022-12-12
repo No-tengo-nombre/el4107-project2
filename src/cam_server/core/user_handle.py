@@ -50,8 +50,6 @@ def handle_user_flow(
         LOGGER.debug("Listening for user packet")
         send_full_msg(user_conn, "OK".encode())
         packet = receive_full_msg(user_conn)
-        print("RECEIVED PACKETAS DFSAF SAD FSDF SD")
-        print(packet.decode())
         LOGGER.debug("Sending packet to client")
         send_full_msg(client_conn, packet)
         LOGGER.debug("Listening for client packet")
