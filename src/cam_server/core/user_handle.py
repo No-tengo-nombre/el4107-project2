@@ -45,6 +45,7 @@ def handle_user_flow(
     receive_full_msg(user_conn)
 
     LOGGER.info("Received confirmation, moving to packet redirection")
+    time.sleep(1)
     while True:
         LOGGER.debug("Listening for user packet")
         packet = receive_full_msg(user_conn)
@@ -70,6 +71,7 @@ def validate_user(db, conn):
     try:
         validation_status = db.validate_user(username, password)
         LOGGER.info(f"Validation status {validation_status}")
+        time.sleep(1)
         return validation_status
     except UserNotFoundException:
         send_full_msg(
@@ -80,6 +82,8 @@ def validate_user(db, conn):
         if answer == "Y":
             db.register_user(username, password)
             send_full_msg(conn, f"@echo Registered user {username}. Welcome!".encode())
+            time.sleep(1)
             return True
         else:
+            time.sleep(1)
             return False
