@@ -48,6 +48,7 @@ def handle_user_flow(
     time.sleep(1)
     while True:
         LOGGER.debug("Listening for user packet")
+        send_full_msg(user_conn, "OK".encode())
         packet = receive_full_msg(user_conn)
         print("RECEIVED PACKETAS DFSAF SAD FSDF SD")
         print(packet.decode())
