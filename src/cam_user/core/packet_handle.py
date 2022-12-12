@@ -5,7 +5,6 @@ from cam_common.utils import receive_full_msg, send_full_msg
 from getpass import getpass
 
 import socket
-import webbrowser
 
 
 def handle_reconnection(user, sv_socket, reconnection_socket, server_ip):
@@ -54,7 +53,8 @@ def handle_packet(user, packet, server_socket):
 
         # Go into main traffic mode
         if signal == SIGNAL_START_TRAFFIC:
-            browser_conn, _ = val
+            browser_conn, addr = val
+            LOGGER.info(f"Received connection from {addr}")
             browser_conn.settimeout(DEFAULT_TIMEOUT)
             while True:
                 packet = b""
@@ -130,5 +130,4 @@ def __server_action_webbrowser_new_tab(args, server_socket, *_, **__):
     local_s.bind(("127.0.0.1", USER_LOCAL_PORT))
     local_s.listen()
 
-    webbrowser.get().open_new_tab(address)
     return SIGNAL_START_TRAFFIC, local_s.accept()
