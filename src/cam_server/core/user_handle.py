@@ -54,11 +54,13 @@ def handle_user_flow(
         try:
             user_addr = get_request_field(packet, "Host")
             packet = replace_request_field(packet, "Host", f"{server.ip}:{user_port}")
+            LOGGER.debug(f"Replaced field Host in user packet, got {packet}")
         except:
             LOGGER.info("Request does not contain field Host")
         try:
             user_referer = get_request_field(packet, "Referer")
             packet = replace_request_field(packet, "Referer", f"http://{server.ip}:{user_port}/")
+            LOGGER.debug(f"Replaced field Referer in user packet, got {packet}")
         except:
             LOGGER.info("Request does not contain field Referer")
 
@@ -69,10 +71,12 @@ def handle_user_flow(
         response = receive_full_msg(client_conn)
         try:
             response = replace_request_field(response, "Host", user_addr)
+            LOGGER.debug(f"Replaced field Host in client response, got {response}")
         except:
             LOGGER.info("Request does not contain field Host")
         try:
             response = replace_request_field(response, "Referer", user_referer)
+            LOGGER.debug(f"Replaced field Referer in client response, got {response}")
         except:
             LOGGER.info("Request does not contain field Referer")
 
