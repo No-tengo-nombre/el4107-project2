@@ -3,7 +3,7 @@ import threading
 
 from cam_common.configs import DEFAULT_SERVER_PORT, DEFAULT_CLIENT_PORT, DEFAULT_TIMEOUT
 from cam_common.logger import LOGGER
-from cam_common.utils import receive_full_msg, EMPTY_SOCKET
+from cam_common.utils import receive_full_msg, EMPTY_SOCKET, send_full_msg
 from cam_server.core.user_handle import handle_user
 from cam_server.database.database import USER_DATABASE
 from cam_server.core.resource_assigner import PortAssigner
@@ -140,7 +140,8 @@ class ServerCore:
                             try:
                                 user_s.bind((self.ip, port))
                                 user_s.listen()
-                                conn.send(f"@redirect_port {port}".encode())
+                                # conn.send(f"@redirect_port {port}".encode())
+                                send_full_msg(conn, f"@redirect_port {port}".encode())
                                 # conn.recv(RECEIVING_WINDOW)
                                 receive_full_msg(conn)
                                 LOGGER.info("Received port redirection OK")
@@ -148,7 +149,8 @@ class ServerCore:
                                 # Accept the connection to the new port
                                 conn, addr = user_s.accept()
                                 LOGGER.info(f"Assigned {addr} to port {port}")
-                                conn.send(WELCOME_MSG.encode())
+                                # conn.send(WELCOME_MSG.encode())
+                                send_full_msg(conn, WELCOME_MSG.encode())
 
                                 user_thread = threading.Thread(target=handle_user, args=(self, self.db, conn, user_s, client_conn, client_s, port))
                                 user_thread.start()

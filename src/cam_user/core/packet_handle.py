@@ -1,7 +1,7 @@
 from cam_common.configs import RECEIVING_WINDOW
 from cam_common.logger import LOGGER
 from cam_common.signals import SIGNAL_BREAK
-from cam_common.utils import receive_full_msg
+from cam_common.utils import receive_full_msg, send_full_msg
 from getpass import getpass
 
 import webbrowser
@@ -30,7 +30,8 @@ def handle_auth(user, sv_socket):
             LOGGER.debug(f"Got signal {signal}")
         if signal == SIGNAL_BREAK:
             LOGGER.debug("Breaking authentication loop")
-            sv_socket.send("OK".encode())
+            # sv_socket.send("OK".encode())
+            send_full_msg(sv_socket, "OK".encode())
             break
 
 
@@ -65,18 +66,21 @@ def handle_packet(user, packet, server_socket):
 
 def __server_action_echo(args, server_socket, *_, **__):
     print(*args)
-    server_socket.send("OK".encode())
+    # server_socket.send("OK".encode())
+    send_full_msg(server_socket, "OK".encode())
 
 
 def __server_action_input(args, server_socket, *_, **__):
     print(*args)
     print(">>> ", end="")
-    server_socket.send(input().encode())
+    # server_socket.send(input().encode())
+    send_full_msg(server_socket, input().encode())
 
 
 def __server_action_hidden_input(args, server_socket, *_, **__):
     print(*args)
-    server_socket.send(getpass(">>> ").encode())
+    # server_socket.send(getpass(">>> ").encode())
+    send_full_msg(server_socket, getpass(">>> ").encode())
 
 
 def __server_action_kick(args, server_socket, *_, **__):
@@ -92,7 +96,8 @@ def __server_action_break_while_loop(*_, **__):
 def __server_action_redirect_port(args, server_socket, reconnection_socket, server_ip, **__):
     port = int(args[0])
     LOGGER.debug(f"Redirecting connection to {server_ip}:{port}")
-    server_socket.send("OK".encode())
+    # server_socket.send("OK".encode())
+    send_full_msg(server_socket, "OK".encode())
     server_socket.close()
     reconnection_socket.connect((server_ip, port))
 
@@ -100,5 +105,6 @@ def __server_action_redirect_port(args, server_socket, reconnection_socket, serv
 def __server_action_webbrowser_new_tab(args, server_socket, *_, **__):
     address = f"{''.join(args[:-1])}:{args[-1]}"
     LOGGER.info(f"Received connection request to {address}")
-    server_socket.send("OK".encode())
+    # server_socket.send("OK".encode())
+    send_full_msg(server_socket, "OK".encode())
     webbrowser.get().open_new_tab(address)
