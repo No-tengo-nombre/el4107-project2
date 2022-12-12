@@ -1,3 +1,4 @@
+from cam_common.configs import USER_LOCAL_PORT
 from cam_common.logger import LOGGER
 from cam_common.utils import receive_full_msg, send_full_msg
 from cam_server.database.database import UserNotFoundException
@@ -40,7 +41,7 @@ def handle_user_flow(
     server, user_conn, user_socket, client_conn, client_socket, user_port
 ):
     LOGGER.info(f"Sending connection request")
-    send_full_msg(user_conn, f"@webbrowser_new_tab http:// $ip {user_port}".encode())
+    send_full_msg(user_conn, f"@webbrowser_new_tab http:// 127.0.0.1 {USER_LOCAL_PORT}".encode())
     LOGGER.info("Receiving connection request confirmation")
     receive_full_msg(user_conn)
 
@@ -48,7 +49,6 @@ def handle_user_flow(
     time.sleep(1)
     while True:
         LOGGER.debug("Listening for user packet")
-        # send_full_msg(user_conn, "OK".encode())
         packet = receive_full_msg(user_conn)
         LOGGER.debug("Sending packet to client")
         send_full_msg(client_conn, packet)

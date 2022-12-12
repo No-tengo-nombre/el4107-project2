@@ -122,8 +122,7 @@ def __server_action_redirect_port(
 
 
 def __server_action_webbrowser_new_tab(args, server_socket, *_, **__):
-    # address = f"{''.join(args[:-1])}:{args[-1]}"
-    address = f"http://127.0.0.1:{USER_LOCAL_PORT}"
+    address = f"{''.join(args[:-1])}:{args[-1]}"
     LOGGER.info(f"Received connection request to {address}")
     send_full_msg(server_socket, "OK".encode())
 
