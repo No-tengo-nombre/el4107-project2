@@ -1,6 +1,6 @@
 from cam_server.core.server_core import ServerCore
 from cam_common.logger import setup_logger
-from cam_common.configs import DEFAULT_SERVER_IP, DEFAULT_SERVER_PORT
+from cam_common.configs import DEFAULT_SERVER_PORT, DEFAULT_CLIENT_PORT
 import argparse
 
 
@@ -23,6 +23,14 @@ PARSER.add_argument(
     type=int,
     default=DEFAULT_SERVER_PORT,
     help="set the port of the server",
+)
+PARSER.add_argument(
+    "-c",
+    "--client-port",
+    action="store",
+    type=int,
+    default=DEFAULT_CLIENT_PORT,
+    help="set the port of the server exposed to the client",
 )
 PARSER.add_argument(
     "--quiet",
@@ -49,5 +57,5 @@ args = PARSER.parse_args()
 
 
 setup_logger(args.quiet, args.debug, args.verbose, args.logs)
-sv = ServerCore(args.ip, args.port)
+sv = ServerCore(args.ip, args.port, args.client_port)
 sv.start()
