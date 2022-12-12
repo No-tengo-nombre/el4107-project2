@@ -4,11 +4,13 @@ from cam_common.utils import receive_full_msg, send_full_msg
 from cam_server.database.database import UserNotFoundException
 from cam_server.core.resource_assigner import PortAssigner
 
+import time
 import webbrowser
 
 
 def handle_user(server, db, user_conn, user_socket, client_conn, client_socket, user_port):
     try:
+        time.sleep(1)
         if validate_user(db, user_conn):
             LOGGER.info("Successfuly validated user")
             # user_conn.send("@echo Successfuly validated user :)".encode())
