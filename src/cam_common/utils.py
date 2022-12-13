@@ -26,6 +26,9 @@ def yield_full_msg(sock, window=RECEIVING_WINDOW):
             if msg.endswith(rb"\r\n\r\n"):
                 finished = True
                 yield msg[:-8]
+            elif msg == b"":
+                finished = True
+                yield msg
             else:
                 yield msg
         except socket.timeout:
