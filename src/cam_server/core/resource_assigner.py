@@ -5,7 +5,6 @@ from cam_common.logger import LOGGER
 class PortAssigner:
     __free_ports = PORTS_FOR_USERS.copy()
     __used_ports = []
-    __socket_mapping = {}
     __port_mapping = {}
 
     @staticmethod
@@ -25,8 +24,6 @@ class PortAssigner:
         try:
             idx = PortAssigner.__used_ports.index(port)
             PortAssigner.__free_ports.append(PortAssigner.__used_ports.pop(idx))
-            _, addr = PortAssigner.__port_mapping[port]
-            del PortAssigner.__socket_mapping[addr]
             del PortAssigner.__port_mapping[port]
             LOGGER.info(
                 f"Released port {port}, free ports {PortAssigner.__free_ports}, used ports {PortAssigner.__used_ports}"
@@ -36,9 +33,12 @@ class PortAssigner:
             return False
 
     @staticmethod
-    def assign_socket_to_port(port, sock, addr):
-        PortAssigner.__socket_mapping[addr] = (sock, port)
-        PortAssigner.__port_mapping[port] = (sock, addr)
+    def get_port_mapping():
+        return PortAssigner.__port_mapping
+
+    @staticmethod
+    def assign_user_to_port(port, user):
+        PortAssigner.__port_mapping[port] = user
 
     @staticmethod
     def get_sock_from_port(port):
@@ -46,7 +46,8 @@ class PortAssigner:
 
     @staticmethod
     def get_port_from_addr(addr):
-        return PortAssigner.__socket_mapping[addr]
+        socket_mapping = {val[1]: key for key, val in PortAssigner.__port_mapping.items()}
+        return socket_mapping[addr]
 
     def __enter__(self):
         self.__port = PortAssigner.get_port()
@@ -54,3 +55,21 @@ class PortAssigner:
 
     def __exit__(self, *_, **__):
         PortAssigner.release_port(self.__port)
+
+
+class UserIdentifier:
+    def __init__(self, username, socket, address):
+        self.username = username
+        self.socket = socket
+        self.address = address
+
+
+
+def format_port_mapping(port_mapping):
+    result = "+------------+-----------------+-----------------+\n"
+    result += "| Port       | Username        | Address         |\n"
+    result += "+------------+-----------------+-----------------+\n"
+    for port, user in port_mapping.items():
+        result += f"| {str(port):10} | {user.username:15} | {user.address[0]:15} |\n"
+        result += "+------------+-----------------+-----------------+\n"
+    return result
