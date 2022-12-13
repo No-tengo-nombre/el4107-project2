@@ -71,5 +71,5 @@ def format_port_mapping(port_mapping):
     result += "+------------+-----------------+-----------------+\n"
     for port, user in port_mapping.items():
         result += f"| {str(port):10} | {user.username:15} | {user.address[0]:15} |\n"
-        result += "+------------+-----------------+-----------------+\n"
+    result += "+------------+-----------------+-----------------+\n"
     return result
