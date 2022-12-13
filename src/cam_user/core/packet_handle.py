@@ -1,4 +1,4 @@
-from cam_common.configs import USER_LOCAL_PORT, DEFAULT_TIMEOUT, RECEIVING_WINDOW
+from cam_common.configs import USER_LOCAL_PORT
 from cam_common.logger import LOGGER
 from cam_common.signals import SIGNAL_BREAK, SIGNAL_START_TRAFFIC
 from cam_common.utils import receive_full_msg, send_full_msg
@@ -55,14 +55,8 @@ def handle_packet(user, packet, server_socket):
         if signal == SIGNAL_START_TRAFFIC:
             browser_conn, addr = val
             LOGGER.info(f"Received connection from {addr}")
-            browser_conn.settimeout(DEFAULT_TIMEOUT)
             while True:
-                packet = b""
-                while True:
-                    try:
-                        packet += browser_conn.recv(RECEIVING_WINDOW)
-                    except socket.timeout:
-                        break
+                packet = receive_full_msg(browser_conn)
                 LOGGER.debug("Received packet from browser")
                 send_full_msg(server_socket, packet)
                 LOGGER.debug("Sent packet to server")
