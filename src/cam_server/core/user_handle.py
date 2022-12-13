@@ -2,18 +2,27 @@ from cam_common.configs import USER_LOCAL_PORT
 from cam_common.logger import LOGGER
 from cam_common.utils import receive_full_msg, send_full_msg
 from cam_server.database.database import UserNotFoundException
-from cam_server.core.resource_assigner import PortAssigner
+from cam_server.core.resource_assigner import PortAssigner, format_port_mapping
 
 import time
 
 
 def handle_user(
-    server, db, user_conn, user_socket, client_conn, client_socket, user_port
+    server, db, user_conn, user_socket, client_conn, client_socket, user_port, user_identifier,
 ):
     try:
+
         time.sleep(1)
-        if validate_user(db, user_conn):
+        user_validation_status, username = validate_user(db, user_conn)
+        if user_validation_status:
             LOGGER.info("Successfuly validated user")
+
+            user_identifier.username = username
+            PortAssigner.assign_user_to_port(user_port, user_identifier)
+            LOGGER.info(f"Assigned {user_identifier} to port {user_port}")
+
+            print(format_port_mapping(PortAssigner.get_port_mapping()))
+
             send_full_msg(user_conn, "@echo Successfuly validated user :)".encode())
             receive_full_msg(user_conn)
             send_full_msg(user_conn, "@break_while_loop".encode())
@@ -27,7 +36,7 @@ def handle_user(
             send_full_msg(user_conn, "@kick Failed to validate the user :(".encode())
 
             user_socket.close()
-            PortAssigner.release_port(user_port)
+            # PortAssigner.release_port(user_port)
             LOGGER.info("Finishing user thread.")
     except Exception as e:
         LOGGER.warning(
@@ -35,6 +44,7 @@ def handle_user(
         )
     finally:
         PortAssigner.release_port(user_port)
+        print(format_port_mapping(PortAssigner.get_port_mapping()))
 
 
 def handle_user_flow(
@@ -72,7 +82,7 @@ def validate_user(db, conn):
         validation_status = db.validate_user(username, password)
         LOGGER.info(f"Validation status {validation_status}")
         time.sleep(1)
-        return validation_status
+        return validation_status, username
     except UserNotFoundException:
         send_full_msg(
             conn,
@@ -83,7 +93,7 @@ def validate_user(db, conn):
             db.register_user(username, password)
             send_full_msg(conn, f"@echo Registered user {username}. Welcome!".encode())
             time.sleep(1)
-            return True
+            return True, username
         else:
             time.sleep(1)
-            return False
+            return False, username
