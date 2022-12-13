@@ -61,6 +61,14 @@ def handle_packet(user, packet, server_socket):
                 send_full_msg(server_socket, packet)
                 LOGGER.debug("Listening for server packet")
                 response = receive_full_msg(server_socket)
+
+                signal = handle_command(
+                    user,
+                    response.decode(),
+                )
+                if signal == SIGNAL_BREAK:
+                    break
+
                 LOGGER.debug("Sending packet to browser")
                 browser_conn.send(response)
 
