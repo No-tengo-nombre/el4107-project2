@@ -33,9 +33,7 @@ def yield_full_msg(sock, window=RECEIVING_WINDOW):
 
 
 def receive_full_msg(sock, window=RECEIVING_WINDOW):
-    final_msg = b""
-    for part in yield_full_msg(sock, window):
-        final_msg += part
+    final_msg = b"".join(yield_full_msg(sock, window))
     LOGGER.debug(f"Received message {final_msg}")
     return final_msg
 
