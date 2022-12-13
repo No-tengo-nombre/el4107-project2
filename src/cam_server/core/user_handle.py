@@ -51,7 +51,7 @@ def handle_user_flow(
     server, user_conn, user_socket, client_conn, client_socket, user_port
 ):
     LOGGER.info(f"Sending connection request")
-    send_full_msg(user_conn, f"@webbrowser_new_tab 127.0.0.1 {user_port}".encode())
+    send_full_msg(user_conn, f"@webbrowser_new_tab 127.0.0.1 {USER_LOCAL_PORT}".encode())
     LOGGER.info("Receiving connection request confirmation")
     receive_full_msg(user_conn)
 
