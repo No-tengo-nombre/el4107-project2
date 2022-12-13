@@ -6,7 +6,7 @@ from cam_common.logger import LOGGER
 from cam_common.utils import receive_full_msg, send_full_msg
 from cam_server.core.user_handle import handle_user
 from cam_server.database.database import USER_DATABASE
-from cam_server.core.resource_assigner import PortAssigner
+from cam_server.core.resource_assigner import PortAssigner, UserIdentifier
 
 
 WELCOME_MSG = r"""
@@ -132,8 +132,7 @@ class ServerCore:
 
                                 # Accept the connection to the new port
                                 conn, addr = user_s.accept()
-                                PortAssigner.assign_socket_to_port(port, conn, addr)
-                                LOGGER.info(f"Assigned {addr} to port {port}")
+                                user_identifier = UserIdentifier(None, conn, addr)
                                 send_full_msg(conn, WELCOME_MSG.encode())
 
                                 user_thread = threading.Thread(
@@ -146,6 +145,7 @@ class ServerCore:
                                         client_conn,
                                         client_s,
                                         port,
+                                        user_identifier,
                                     ),
                                 )
                                 user_thread.start()
