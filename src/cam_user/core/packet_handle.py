@@ -1,4 +1,3 @@
-from cam_common.configs import USER_LOCAL_PORT
 from cam_common.logger import LOGGER
 from cam_common.signals import SIGNAL_BREAK, SIGNAL_START_TRAFFIC
 from cam_common.utils import receive_full_msg, send_full_msg
@@ -56,14 +55,14 @@ def handle_packet(user, packet, server_socket):
             browser_conn, addr = val
             LOGGER.info(f"Received connection from {addr}")
             while True:
+                LOGGER.debug("Listening for browser packet")
                 packet = receive_full_msg(browser_conn)
-                LOGGER.debug("Received packet from browser")
+                LOGGER.debug("Sending packet to server")
                 send_full_msg(server_socket, packet)
-                LOGGER.debug("Sent packet to server")
+                LOGGER.debug("Listening for server packet")
                 response = receive_full_msg(server_socket)
-                LOGGER.debug("Received packet from server")
+                LOGGER.debug("Sending packet to browser")
                 browser_conn.send(response)
-                LOGGER.debug("Sent packet to browser")
 
 
 # Available commands
@@ -121,7 +120,7 @@ def __server_action_webbrowser_new_tab(args, server_socket, *_, **__):
     send_full_msg(server_socket, "OK".encode())
 
     local_s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    local_s.bind(("127.0.0.1", USER_LOCAL_PORT))
+    local_s.bind(("".join(args[:-1]), int(args[-1])))
     local_s.listen()
 
     return SIGNAL_START_TRAFFIC, local_s.accept()
